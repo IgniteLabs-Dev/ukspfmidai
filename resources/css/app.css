@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+:root {
+    --primary: #307ff5 ;
+    --secondary: #3d63e0;
+    --success: #0fc96f;
+    --danger: #e0294d;
+    --warning: #f99b05;
+    --info: #17a2b8 ;
+    --light: #f8f9fa;
+    --dark: #343a40;
+}
+
+html {
+    color-scheme: light !important;
+}
