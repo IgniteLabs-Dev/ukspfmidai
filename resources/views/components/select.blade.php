@@ -22,7 +22,7 @@
 
     @php
         $baseClass =
-            'bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5';
+            'bg-gray-50 cursor-pointer border border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5';
         $mbClass = $mb ? ' mb-' . $mb : '';
         $finalClass = trim($baseClass . $mbClass);
     @endphp

@@ -50,14 +50,7 @@
                     <tr>
                         <td class="px-6 py-4 text-sm text-gray-900">{{ $data->firstItem() + $loop->index }}</td>
                         <td class="px-6 py-4 text-sm text-gray-900">{{ $item->cutiType->name }}</td>
-                        <td class="px-6 py-4 text-sm text-gray-900">
-                            @foreach (explode(',', $item->tanggal) as $tgl)
-                                <span
-                                    class="inline-block bg-[var(--info)] text-white text-xs font-semibold mb-0.5 px-1.5 py-0.5 rounded">
-                                    {{ trim($tgl) }}
-                                </span>
-                            @endforeach
-                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-900">{{ $item->tanggal_start }} - {{ $item->tanggal_end }}</td>
                         <td class="px-6 py-4 text-sm text-gray-900">{{ $item->alasan }}</td>
                         <td class="px-6 py-4 text-sm text-gray-900">
                             <span
