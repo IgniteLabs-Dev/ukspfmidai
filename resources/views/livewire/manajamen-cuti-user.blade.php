@@ -250,8 +250,6 @@
                                         <thead class="text-xs text-gray-700 uppercase bg-gray-100 rounded-t-xl">
                                             <tr>
                                                 <th scope="col" class="px-6 py-3">No</th>
-                                                <th scope="col" class="px-6 py-3">Total Hari</th>
-                                                <th scope="col" class="px-6 py-3">Kuota Yang Digunakan</th>
                                                 <th scope="col" class="px-6 py-3">Tanggal</th>
                                                 <th scope="col" class="px-6 py-3">Pengajuan</th>
                                                 <th scope="col" class="px-6 py-3">Tanggal ACC</th>
@@ -263,17 +261,6 @@
                                                 <tr class="odd:bg-white even:bg-gray-50">
                                                     <td class="px-6 py-4">
                                                         {{ $loop->iteration + ($riwayatCuti->current_page - 1) * $riwayatCuti->per_page }}
-                                                    </td>
-                                                    <td class="px-6 py-4">
-                                                        {{ $item->total_hari }}
-                                                    </td>
-                                                    <td class="px-6 py-4">
-                                                        @if (!empty($item->kuota_used_grouped))
-                                                            @foreach (explode(',', $item->kuota_used_grouped) as $kuota_used_grouped)
-                                                                <span
-                                                                    class="inline-flex items-center px-2 py-0 rounded-full text-xs font-medium bg-[var(--info)] text-white mr-0">{{ trim($kuota_used_grouped) }}</span>
-                                                            @endforeach
-                                                        @endif
                                                     </td>
                                                     <td class="px-6 py-4">
                                                         @if (!empty($item->tanggal))

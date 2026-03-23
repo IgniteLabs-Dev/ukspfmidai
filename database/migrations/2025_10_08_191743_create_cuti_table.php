@@ -18,8 +18,8 @@ return new class extends Migration
             $table->dateTime('tanggal_acc')->nullable();
             $table->text('alasan')->nullable();
             $table->enum('status', ['pending', 'success', 'failed', 'menunggu_ketua']);
-            $table->string('tanggal')->nullable();
-            $table->text('kuota_used')->nullable();
+            $table->string('tanggal_start')->nullable();
+            $table->string('tanggal_end')->nullable();
             $table->integer('total_hari')->nullable();
             $table->timestamps();
         });

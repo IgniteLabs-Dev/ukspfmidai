@@ -14,9 +14,7 @@ return new class extends Migration
         Schema::create('cuti_type', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('deskripsi')->nullable();
             $table->enum('status', ['active', 'inactive']);
-            $table->boolean('is_count')->default(0);
             $table->timestamps();
         });
     }

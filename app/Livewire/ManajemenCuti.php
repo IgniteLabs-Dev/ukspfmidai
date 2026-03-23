@@ -14,23 +14,18 @@ class ManajemenCuti extends Component
     public $editId = null;
     public $deleteId = null;
     public $filter = null;
-    public $name, $status, $deskripsi, $is_count;
+    public $name, $status;
 
     protected $rules = [
-
         'name' => 'required|string|max:255',
-        'deskripsi' => 'required|string|max:255',
         'status' => 'required|string',
-        'is_count' => 'required|integer',
-
     ];
 
     public function render()
     {
         $data = CutiType::when(!empty($this->filter), function ($query) {
             $query->where(function ($subquery) {
-                $subquery->where('name', 'like', '%' . $this->filter . '%')
-                    ->orWhere('deskripsi', 'like', '%' . $this->filter . '%');
+                $subquery->where('name', 'like', '%' . $this->filter . '%');
             });
         })
             ->orderBy('id', 'desc')
@@ -48,7 +43,7 @@ class ManajemenCuti extends Component
         $this->mode = 'view';
         $this->editId = null;
         $this->resetValidation();
-        $this->reset(['name', 'status', 'deskripsi', 'is_count']);
+        $this->reset(['name', 'status']);
     }
     public function create(CrudService $crud)
     {
@@ -56,9 +51,7 @@ class ManajemenCuti extends Component
 
         $data = [
             'name' => $this->name,
-            'deskripsi' => $this->deskripsi,
             'status' => $this->status,
-            'is_count' => $this->is_count,
         ];
 
         $crud->create(CutiType::class, $data, 'Tipe Cuti berhasil dibuat!', 'Gagal membuat tipe cuti.');
@@ -71,8 +64,6 @@ class ManajemenCuti extends Component
         if ($data) {
             $this->name = $data->name;
             $this->status = $data->status;
-            $this->deskripsi = $data->deskripsi;
-            $this->is_count = $data->is_count;
             $this->mode = 'edit';
             $this->editId = $id;
         }
@@ -83,9 +74,7 @@ class ManajemenCuti extends Component
         $this->validate();
         $data = [
             'name' => $this->name,
-            'deskripsi' => $this->deskripsi,
             'status' => $this->status,
-            'is_count' => $this->is_count,
         ];
 
         $crud->update(CutiType::class, $this->editId, $data, 'Tipe cuti berhasil diperbarui!', 'Gagal memperbarui tipe cuti.');

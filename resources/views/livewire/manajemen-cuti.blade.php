@@ -31,7 +31,6 @@
                                 <th scope="col" class="px-6 py-3">Nama</th>
                                 <th scope="col" class="px-6 py-3 ">Deskripsi</th>
                                 <th scope="col" class="px-6 py-3 text-center">Status</th>
-                                <th scope="col" class="px-6 py-3 text-center">Apakah Cuti Tahunan</th>
                                 <th scope="col" class="px-6 py-3 text-center">Aksi</th>
                             </tr>
                         </thead>
@@ -51,19 +50,6 @@
                                             <span
                                                 class="px-2 py-1 text-xs font-semibold text-white bg-[var(--danger)] rounded-full">
                                                 Tidak Aktif
-                                            </span>
-                                        @endif
-                                    </td>
-                                    <td class="px-6 py-4  justify-center ">
-                                        @if ($item->is_count == 1)
-                                            <span
-                                                class="px-2 py-1 text-xs font-semibold text-white bg-[var(--success)] rounded-full">
-                                                Ya
-                                            </span>
-                                        @else
-                                            <span
-                                                class="px-2 py-1 text-xs font-semibold text-white bg-[var(--danger)] rounded-full">
-                                                Tidak
                                             </span>
                                         @endif
                                     </td>
@@ -118,17 +104,11 @@
             <div class="grid grid-cols-2 gap-4">
                 <x-input label="Nama" for="name" wire="name" type="text" placeholder="Nama Cuti"
                     :required="true" />
-                <x-select label="Apakah Cuti Tahunan" for="cuti_tahunan" wire="is_count" :options="[
-                    1 => 'Ya',
-                    0 => 'Tidak',
-                ]"
-                    :required="true" />
                 <x-select label="Status" for="status" wire="status" :options="[
                     'active' => 'Aktif',
                     'nonactive' => 'Tidak Aktif',
                 ]" :required="true" />
-                <x-textarea label="Deskripsi" for="deskripsi" wire="deskripsi" type="text"
-                    placeholder="Masukkan Deskripsi" :required="true" rows="5" />
+
                 <div class="col-span-2 flex justify-center items-end gap-2">
                     <x-button wire:click="resetInput" bg="[var(--danger)]" label="Batal" />
                     @if ($editId)

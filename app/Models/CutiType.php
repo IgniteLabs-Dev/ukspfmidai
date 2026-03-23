@@ -9,7 +9,7 @@ class CutiType extends Model
 {
     use HasFactory;
     protected $table = 'cuti_type';
-    protected $fillable = ['name', 'status', 'deskripsi', 'is_count'];
+    protected $fillable = ['name', 'status'];
 
     public function cuti()
     {

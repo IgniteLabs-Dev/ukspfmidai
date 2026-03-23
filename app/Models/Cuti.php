@@ -15,9 +15,8 @@ class Cuti extends Model
         'tanggal_acc',
         'alasan',
         'status',
-        'tanggal',
-        'kuota_used',
-        'total_hari',
+        'tanggal_start',
+        'tanggal_end',
     ];
 
     public function cutiType()

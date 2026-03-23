@@ -7,10 +7,10 @@
         <!-- Jenis Cuti -->
         <x-select label="Jenis Cuti" for="cuti_type_id" wire="cuti_type_id" :options="$cutiTypes" :required="true" />
         <!-- Tanggal Cuti -->
-        <div class="mb-4">
-            <label for="tanggal-cuti" class="block text-sm font-medium text-gray-700 mb-2">Tanggal
-                Cuti</label>
-            <input type="text" class="date border rounded-lg p-2" placeholder="Pilih tanggal" />
+        <div class="mb-4 flex gap-2 mt-2">
+            <x-input label="Tanggal Mulai" for="tanggal_start" wire="tanggal_start" type="date" placeholder="Tanggal" :required="true" />
+
+            <x-input label="Tanggal Selesai" for="tanggal_end" wire="tanggal_end" type="date" placeholder="Tanggal" :required="true" />
         </div>
 
         <x-textarea label="Alasan" for="alasan" wire="alasan" type="text" placeholder="Masukkan Alasan"
@@ -23,29 +23,4 @@
 
 </div>
 
-@push('scripts')
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
-    <script>
-        flatpickr("#datepicker", {
-            mode: "multiple",
-            dateFormat: "d/m/Y",
-        });
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            flatpickr(".date", {
-                mode: "multiple",
-                dateFormat: "d-m-Y",
-                onChange: function(selectedDates, dateStr, instance) {
-                    let formattedDates = selectedDates.map(date =>
-                        instance.formatDate(date, "d-m-Y")
-                    ).join(", ");
-
-                    @this.set('tanggal', formattedDates);
-                }
-            });
-        });
-    </script>
-@endpush

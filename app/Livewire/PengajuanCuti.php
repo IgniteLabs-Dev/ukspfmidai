@@ -15,7 +15,7 @@ use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 
 class PengajuanCuti extends Component
 {
-    public $cuti_type_id, $alasan, $tanggal,$total_hari;
+    public $cuti_type_id, $alasan, $tanggal_start, $tanggal_end;
 
     public function render()
     {
@@ -30,34 +30,15 @@ class PengajuanCuti extends Component
         $this->validate([
             'cuti_type_id' => 'required',
             'alasan' => 'required',
-            'tanggal' => 'required',
+            'tanggal_start' => 'required',
+            'tanggal_end' => 'required',
         ]);
 
-        $totalHari = 0;
-        if (!empty($this->tanggal)) {
-            $tanggalArray = explode(',', $this->tanggal);
-            $totalHari = count(array_map('trim', $tanggalArray));
-        }
+
 
          $user = JWTAuth::parseToken()->authenticate();
-        $kuotaUsed = ViewCutiTahunan::where('user_id', $user->id)
-            ->where('cuti_type_id', $this->cuti_type_id)
-            ->pluck('uraian_tahun')
-            ->first();
 
-
-        $this->total_hari = count($tanggalArray);
-
-        if ($kuotaUsed) {
-            $tahunArray = explode(',', $kuotaUsed);
-            $selectedTahun = array_slice($tahunArray, 0, $this->total_hari);
-            $kuotaYearUsed = implode(',', $selectedTahun);
-        } else {
-            $kuotaYearUsed = null;
-        }
-
-
-        DB::transaction(function () use ($totalHari,$kuotaYearUsed) {
+        DB::transaction(function ()  {
             $user = JWTAuth::parseToken()->authenticate();
 
             $data = [
@@ -65,9 +46,8 @@ class PengajuanCuti extends Component
                 'cuti_type_id' => $this->cuti_type_id,
                 'alasan' => $this->alasan,
                 'status' => 'pending',
-                'tanggal' => $this->tanggal,
-                'kuota_used' => $kuotaYearUsed,
-                'total_hari' => $totalHari,
+                'tanggal_start' => $this->tanggal_start,
+                'tanggal_end' => $this->tanggal_end,
             ];
 
             $cuti = Cuti::create($data);
@@ -93,6 +73,6 @@ class PengajuanCuti extends Component
     }
     public function resetInput()
     {
-        $this->reset(['cuti_type_id', 'alasan', 'tanggal']);
+        $this->reset(['cuti_type_id', 'alasan', 'tanggal_start','tanggal_end']);
     }
 }

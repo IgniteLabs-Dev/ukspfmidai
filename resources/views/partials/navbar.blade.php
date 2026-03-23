@@ -1,7 +1,7 @@
 @php
     $user = JWTAuth::parseToken()->authenticate();
 @endphp
-<header class="antialiased fixed right-0  w-full z-200">
+<header class="antialiased fixed right-0  w-full z-10">
     <nav class="bg-white  border-b border-gray-200 px-4 py-3.5">
         <div class="flex flex-wrap justify-between items-center">
             <div class="flex justify-start items-center">
