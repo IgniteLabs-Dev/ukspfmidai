@@ -10,7 +10,10 @@ use App\Models\Tahun;
 use App\Models\User;
 use App\Models\ViewCutiKuota;
 use App\Models\ViewCutiTahunan;
+use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Component;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -20,13 +23,23 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 class RiwayatCuti extends Component
 {
     use WithPagination;
+    use WithFileUploads;
     public $tahun;
     public $cutiType;
     public $bulan;
     public $status;
+    public $alasan;
     public $filter;
-    public $viewFlowId;
-    public $flowData;
+
+    public $editId;
+    public $form = [
+        'alasan' => '',
+        'cuti_type_id' => '',
+        'tanggal_mulai' => '',
+        'tanggal_selesai' => '',
+        'doc' => '',
+    ];
+    public $editDoc = false;
 
     public function mount()
     {
@@ -35,16 +48,24 @@ class RiwayatCuti extends Component
 
     public function render()
     {
-        $tahunData = Tahun::where('status', 'active')
+        $tahunData = Cuti::where('user_id', JWTAuth::parseToken()->authenticate()->id)
+            ->selectRaw('YEAR(created_at) as tahun')
+            ->groupBy('tahun')
+            ->orderBy('tahun', 'desc')
             ->pluck('tahun', 'tahun')
             ->toArray();
         $cutiTypesData = CutiType::where('status', 'active')
             ->pluck('name', 'id')
             ->toArray();
+        $cutiTypes = CutiType::where('status', 'active')->get();
+
 
         $data = Cuti::where('user_id', JWTAuth::parseToken()->authenticate()->id)
             ->when($this->tahun, function ($query) {
                 return $query->whereYear('created_at', $this->tahun);
+            })
+            ->when($this->bulan, function ($query) {
+                return $query->whereMonth('created_at', $this->bulan);
             })
             ->when($this->cutiType, function ($query) {
                 return $query->where('cuti_type_id', $this->cutiType);
@@ -60,18 +81,9 @@ class RiwayatCuti extends Component
             ->orderBy('id', 'desc')
             ->paginate(10);
 
-        return view('livewire.riwayat-cuti', compact('data', 'tahunData', 'cutiTypesData'))->extends('layouts.master');
+        return view('livewire.riwayat-cuti', compact('data', 'tahunData', 'cutiTypesData','cutiTypes'))->extends('layouts.master');
     }
 
-    public function viewFlow($id)
-    {
-        $flowData = CutiApprovalWorkflow::with('approvalLevel')
-            ->where('cuti_id', $id)
-            ->orderBy('id')
-            ->get();
-
-        $this->flowData = $flowData;
-    }
     public function updatedFilter()
     {
         $this->resetPage();
@@ -93,170 +105,121 @@ class RiwayatCuti extends Component
         $this->resetPage();
     }
 
-    public function downloadPdf($id)
+    public function destroy($id)
     {
-        $data = Cuti::find($id);
-        $atasan = CutiApprovalWorkflow::where('cuti_id', $id)->wherehas('approvalLevel', function ($q) {
-            $q->where('is_sign', true);
-        })->get();
-
-        $jabatanAtasan1 = $atasan[0]->approvalLevel->jabatan_id ?? null;
-        $jabatanAtasan2 = $atasan[1]->approvalLevel->jabatan_id ?? null;
-
-        $atasan1 = User::where('jabatan_id', $jabatanAtasan1)->first();
-        $atasan2 = User::where('jabatan_id', $jabatanAtasan2)->first();
-
-        $cutiData = CutiUser::where('user_id', $data->user_id)
-            ->where('tahun', date('Y'))
-            ->with(['cuti' => function ($q) {
-                $q->orderBy('is_count', 'desc');
-            }])
-            ->get();
-
-        $splitData = $this->splitCutiData($cutiData);
-        $leftItems = $splitData['leftItems'];
-        $rightItems = $splitData['rightItems'];
-
-        $tanggalCuti = $this->summaryDate($data->tanggal);
-
-
-        $cutiTypeTanpaTahunan = ViewCutiKuota::where('user_id', $data->user_id)
-            ->where('is_count', '0')
-            ->where('tahun', now()->setTimezone('Asia/Jakarta')->year)
-            ->select('cuti_type_id', 'cuti_type', 'sisa_kuota')
-            ->get();
-
-        $cutiTypeTahunan = ViewCutiTahunan::where('user_id', $data->user_id)
-            ->select('cuti_type_id', 'cuti_type', 'sisa_kuota')
-            ->get();
-        $cuti_type = $cutiTypeTanpaTahunan->concat($cutiTypeTahunan)->values();
-        $cutiTahunan = ViewCutiKuota::where('user_id', $data->user_id)
-            ->where('is_count', '1')
-            ->select('tahun', 'sisa_kuota', 'sisa_cuti_tersimpan')
-            ->take(3)
-            ->orderBy('tahun', 'desc') // ambil 3 terbaru
-            ->get();
-
-        // Urutkan naik (lama -> baru)
-        $cutiTahunan = $cutiTahunan->sortBy('tahun')->values();
-
-        // tambahin placeholder di depan sampai total 3
-        while ($cutiTahunan->count() < 3) {
-            $cutiTahunan->prepend((object)[
-                'tahun' => null,
-                'sisa_kuota' => 0,
-                'sisa_cuti_tersimpan' => 0,
-            ]);
-        }
-
-        // $qrAtasan1 = base64_encode(
-        //     QrCode::format('png')->size(100)->generate($atasan1->name)
-        // );
-        // $qrAtasan2 = base64_encode(
-        //     QrCode::format('png')->size(100)->generate($atasan2->name)
-        // );
-        $qrUser = base64_encode(QrCode::format('svg')->size(200)->errorCorrection('H')->generate($data->user->name));
-        $qrAtasan1 = base64_encode(QrCode::format('svg')->size(200)->errorCorrection('H')->generate($atasan1->name));
-        $qrAtasan2 = base64_encode(QrCode::format('svg')->size(200)->errorCorrection('H')->generate($atasan2->name));
-
-
-        $isPrint = 'true';
-
-        $html = view(
-            'livewire.cuti-doc',
-            [
-                'data' => $data,
-                'qrUser' => $qrUser,
-                'qrAtasan1' => $qrAtasan1,
-                'qrAtasan2' => $qrAtasan2,
-                'isPrint' => $isPrint,
-                'atasan1' => $atasan1,
-                'atasan2' => $atasan2,
-                'leftItems' => $leftItems,
-                'rightItems' => $rightItems,
-                'tanggalCuti' => $tanggalCuti,
-                'cuti_type' => $cuti_type,
-                'cutiTahunan' => $cutiTahunan
-            ]
-        )->render();
-
-        $pdf = Pdf::loadHTML($html)->setPaper('a4', 'portrait'); // tambahin ini
-
-        return response()->streamDownload(function () use ($pdf) {
-            echo $pdf->stream();
-        }, 'Surat Cuti.pdf');
-    }
-
-
-    private function splitCutiData($cutiData)
-    {
-        $leftItems = collect();
-        $rightItems = collect();
-
-        foreach ($cutiData as $index => $item) {
-            // $index dimulai dari 0, jadi tambahin 1 biar urut mulai dari 1
-            if (($index + 1) % 2 === 1) {
-                $leftItems->push($item);
-            } else {
-                $rightItems->push($item);
+        $cuti = Cuti::findOrFail($id);
+        if ($cuti->status == 'pending') {
+            // hapus file
+            if ($cuti->doc) {
+                $oldPath = public_path('files/' . $cuti->doc);
+                if (file_exists($oldPath)) {
+                    unlink($oldPath);
+                }
             }
-        }
 
-        return [
-            'leftItems' => $leftItems,
-            'rightItems' => $rightItems,
+            if ($cuti->delete()) {
+                LivewireAlert::title('Pengajuan cuti berhasil dihapus!')
+                    ->position('top-end')
+                    ->toast()
+                    ->success()
+                    ->show();
+            }
+        } else {
+            LivewireAlert::title('Hanya pengajuan cuti dengan status pending yang dapat dihapus.')
+                ->position('top-end')
+                ->toast()
+                ->error()
+                ->show();
+        }
+    }
+
+    public function edit($id)
+    {
+        $cuti = Cuti::findOrFail($id);
+        $this->editId = $cuti->id;
+        $this->editDoc = $cuti->doc;
+        $this->form = [
+            'alasan' => $cuti->alasan,
+            'cuti_type_id' => $cuti->cuti_type_id,
+            'tanggal_mulai' => $cuti->tanggal_start,
+            'tanggal_selesai' => $cuti->tanggal_end,
         ];
     }
-    public function summaryDate($tanggalString)
+
+    public function update()
     {
-        // Pisahkan tanggal berdasarkan koma
-        Carbon::setLocale('id');
-
-        // Pisahkan tanggal berdasarkan koma
-        $tanggalArray = array_map('trim', explode(',', $tanggalString));
-
-        // Ubah ke Carbon
-        $tanggalCarbon = collect($tanggalArray)->map(function ($t) {
-            return Carbon::createFromFormat('d-m-Y', $t);
-        });
-
-        // Urutkan tanggal
-        $sorted = $tanggalCarbon->sort();
-
-        // Ambil data
-        $jumlah = $tanggalCarbon->count();
-        $terkecil = $sorted->first()->translatedFormat('d F Y'); // hasil: 07 Oktober 2025
-        $terbesar = $sorted->last()->translatedFormat('d F Y');  // hasil: 12 Oktober 2025
-
-        $jumlahTeks = $this->terbilang($jumlah);
-        // Return hasil
-        return [
-            'jumlah' => "{$jumlah} ({$jumlahTeks})",
-            'terkecil' => $terkecil,
-            'terbesar' => $terbesar,
+        $rules = [
+            'form.alasan' => 'required',
+            'form.cuti_type_id' => 'required',
+            'form.tanggal_mulai' => 'required|date',
+            'form.tanggal_selesai' => 'required|date|after_or_equal:form.tanggal_mulai',
         ];
+
+        // wajib upload file baru hanya kalau file lama sudah dihapus
+        if (!$this->editDoc) {
+            $rules['form.doc'] = 'required|file|mimes:pdf,doc,docx|max:10240';
+        } else {
+            $rules['form.doc'] = 'nullable|file|mimes:pdf,doc,docx|max:10240';
+        }
+
+        $this->validate($rules, [
+            'form.alasan.required' => 'Alasan cuti wajib diisi.',
+            'form.cuti_type_id.required' => 'Jenis cuti wajib dipilih.',
+            'form.tanggal_mulai.required' => 'Tanggal mulai wajib diisi.',
+            'form.tanggal_mulai.date' => 'Tanggal mulai tidak valid.',
+            'form.tanggal_selesai.required' => 'Tanggal selesai wajib diisi.',
+            'form.tanggal_selesai.date' => 'Tanggal selesai tidak valid.',
+            'form.tanggal_selesai.after_or_equal' => 'Tanggal selesai tidak boleh sebelum tanggal mulai.',
+            'form.doc.required' => 'File wajib diupload.',
+            'form.doc.mimes' => 'File harus berformat PDF, DOC, atau DOCX.',
+            'form.doc.max' => 'Ukuran file maksimal 10 MB.',
+        ]);
+
+        $data = [
+            'alasan' => $this->form['alasan'],
+            'cuti_type_id' => $this->form['cuti_type_id'],
+            'tanggal_start' => $this->form['tanggal_mulai'],
+            'tanggal_end' => $this->form['tanggal_selesai'],
+        ];
+
+
+        $user = JWTAuth::parseToken()->authenticate();
+        $user = User::find($user->id);
+
+        if (isset($this->form['doc']) && $this->form['doc'] instanceof TemporaryUploadedFile) {
+            // hapus file lama
+            $oldDoc = Cuti::findOrFail($this->editId)->doc;
+            if ($oldDoc) {
+                $oldPath = public_path('files/' . $oldDoc);
+                if (file_exists($oldPath)) {
+                    unlink($oldPath);
+                }
+            }
+
+            $extension = $this->form['doc']->getClientOriginalExtension();
+            $timestamp = now()->format('Ymd_His');
+            $docName = $user->name . '_' . $timestamp . '.' . $extension;
+            $this->form['doc']->storeAs('files', $docName, 'real_public');
+            $data['doc'] = $docName;
+        }
+
+        Cuti::findOrFail($this->editId)->update($data);
+
+        LivewireAlert::title('Pengajuan cuti berhasil diperbarui!')
+            ->position('top-end')
+            ->toast()
+            ->success()
+            ->show();
+
+        $this->dispatch('close-edit');
     }
-    protected function terbilang($angka)
-    {
-        $angka = (int) $angka;
-        if ($angka === 0) {
-            return 'nol';
-        }
 
-        $angka = abs($angka);
-        $satuan = ['', 'Satu', 'Dua', 'Tiga', 'Empat', 'Lima', 'Enam', 'Tujuh', 'Delapan', 'Sembilan', 'Sepuluh', 'Sebelas'];
-
-        if ($angka < 12) {
-            return $satuan[$angka];
-        }
-        if ($angka < 20) {
-            return $this->terbilang($angka - 10) . ' Belas';
-        }
-        if ($angka < 100) {
-            return $this->terbilang(intval($angka / 10)) . ' Puluh' . ($angka % 10 ? ' ' . $this->terbilang($angka % 10) : '');
-        }
-
-
-        return 'angka terlalu besar';
+    public function resetInput()
+    {       $this->form = [
+            'alasan' => '',
+            'cuti_type_id' => '',
+            'tanggal_mulai' => '',
+            'tanggal_selesai' => '',
+        ];
     }
 }
