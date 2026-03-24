@@ -59,6 +59,20 @@ return [
             'throw' => false,
             'report' => false,
         ],
+        'real_public' => [
+            'driver' => 'local',
+            'root' => public_path(),
+            'url' => env('APP_URL'),
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+        // 'real_public' => [
+        //     'driver' => 'local',
+        //     'root' => '/home/sipy6876/public_html',
+        //     'url' => env('APP_URL') . '/public_html',
+        //     'visibility' => 'public',
+        //     'throw' => false,
+        // ],
 
     ],
 

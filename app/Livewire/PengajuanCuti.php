@@ -6,16 +6,20 @@ use App\Models\Cuti;
 use App\Models\CutiApprovalLevel;
 use App\Models\CutiApprovalWorkflow;
 use App\Models\CutiType;
+use App\Models\User;
 use App\Models\ViewCutiTahunan;
 use App\Services\CrudService;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+use Livewire\WithFileUploads;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 
 class PengajuanCuti extends Component
 {
-    public $cuti_type_id, $alasan, $tanggal_start, $tanggal_end;
+    use WithFileUploads;
+    public $cuti_type_id, $alasan, $tanggal_start, $tanggal_end,$doc;
 
     public function render()
     {
@@ -29,17 +33,18 @@ class PengajuanCuti extends Component
     {
         $this->validate([
             'cuti_type_id' => 'required',
-            'alasan' => 'required',
+            'alasan' => 'nullable',
             'tanggal_start' => 'required',
             'tanggal_end' => 'required',
+            'doc' => 'required|file|mimes:pdf,doc,docx|max:10240',
         ]);
-
 
 
          $user = JWTAuth::parseToken()->authenticate();
 
         DB::transaction(function ()  {
             $user = JWTAuth::parseToken()->authenticate();
+            $user = User::find($user->id);
 
             $data = [
                 'user_id' => $user->id,
@@ -50,17 +55,21 @@ class PengajuanCuti extends Component
                 'tanggal_end' => $this->tanggal_end,
             ];
 
-            $cuti = Cuti::create($data);
+            if (isset($this->doc) && $this->doc instanceof TemporaryUploadedFile) {
+                $originalName = pathinfo(
+                    $this->doc->getClientOriginalName(),
+                    PATHINFO_FILENAME
+                );
+                $extension = $this->doc->getClientOriginalExtension();
+                $timestamp = now()->format('Ymd_His');
+                $docName = $user->name . '_' . $timestamp . '.' . $extension;
 
-            $approvalLevel = CutiApprovalLevel::all();
+                $this->doc->storeAs('files', $docName, 'real_public');
 
-            foreach ($approvalLevel as $index => $workflow) {
-                CutiApprovalWorkflow::create([
-                    'cuti_id' => $cuti->id,
-                    'approval_level_id' => $workflow->id,
-                    'status' => $index === 0 ? 'waiting' : 'pending',
-                ]);
+                $data['doc'] = $docName;
             }
+
+            $cuti = Cuti::create($data);
 
             LivewireAlert::title('Pengajuan Cuti Berhasil!')
                 ->position('top-end')
@@ -73,6 +82,6 @@ class PengajuanCuti extends Component
     }
     public function resetInput()
     {
-        $this->reset(['cuti_type_id', 'alasan', 'tanggal_start','tanggal_end']);
+        $this->reset(['cuti_type_id', 'alasan', 'tanggal_start','tanggal_end','doc']);
     }
 }

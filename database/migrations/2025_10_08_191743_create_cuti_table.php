@@ -17,10 +17,10 @@ return new class extends Migration
             $table->foreignId('cuti_type_id')->nullable()->constrained('cuti_type')->onDelete('set null');
             $table->dateTime('tanggal_acc')->nullable();
             $table->text('alasan')->nullable();
-            $table->enum('status', ['pending', 'success', 'failed', 'menunggu_ketua']);
+            $table->enum('status', ['pending', 'success', 'failed'])->default('pending');
             $table->string('tanggal_start')->nullable();
             $table->string('tanggal_end')->nullable();
-            $table->integer('total_hari')->nullable();
+            $table->string('doc');
             $table->timestamps();
         });
     }

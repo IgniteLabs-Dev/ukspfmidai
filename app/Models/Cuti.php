@@ -17,6 +17,7 @@ class Cuti extends Model
         'status',
         'tanggal_start',
         'tanggal_end',
+        'doc',
     ];
 
     public function cutiType()
