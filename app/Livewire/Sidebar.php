@@ -14,6 +14,10 @@ class Sidebar extends Component
         $service = new CutiIzinCountService();
         $izinCount = $service->IzinCount('waiting');
         $cutiCount = $service->CutiCount('waiting');
-        return view('livewire.sidebar', compact('izinCount', 'cutiCount','user'));
+
+        $cutiIzinApprover = $service->IsApprovalUser();
+
+
+        return view('livewire.sidebar', compact('izinCount', 'cutiCount','user', 'cutiIzinApprover'));
     }
 }

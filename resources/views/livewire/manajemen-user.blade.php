@@ -32,6 +32,8 @@
                                 <th scope="col" class="px-6 py-3">Nama</th>
                                 <th scope="col" class="px-6 py-3">NIP</th>
                                 <th scope="col" class="px-6 py-3">Role</th>
+                                <th scope="col" class="px-6 py-3">Jabatan</th>
+                                <th scope="col" class="px-6 py-3">Pangkat</th>
                                 <th scope="col" class="px-6 py-3">Nomor WA</th>
                                 <th scope="col" class="px-6 py-3 text-center">Aksi</th>
                             </tr>
@@ -42,6 +44,8 @@
                                     <td class="px-6 py-4">{{ $item->name ?? '-' }}</td>
                                     <td class="px-6 py-4">{{ $item->nip ?? '-' }}</td>
                                     <td class="px-6 py-4">{{ $item->role ?? '-' }}</td>
+                                    <td class="px-6 py-4">{{ $item->jabatan->name ?? '-' }}</td>
+                                    <td class="px-6 py-4">{{ $item->pangkatRef->name ?? '-' }}</td>
                                     <td class="px-6 py-4">{{ $item->nomor_wa ?? '-' }}</td>
                                     <td class="text-center justify-center">
                                         @if ($deleteId != $item->id)
@@ -93,7 +97,7 @@
         <div class="w-full mt-4">
             <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <x-input label="Nama" for="name" wire="name" type="text" placeholder="Deskripsi"
+                    <x-input label="Nama" for="name" wire="name" type="text" placeholder="Nama"
                         :required="true" />
                 </div>
 
@@ -109,6 +113,15 @@
                             'ADMIN' => 'Admin',
                             'SUPERADMIN' => 'Superadmin',
                         ]" :required="true" />
+                </div>
+
+                <div>
+                    <x-select label="Semua Jabatan" for="jabatan_id" wire="jabatan_id" wireType="change"
+                              placeholder="Semua Jabatan" :options="$jabatanData" :required="true" />
+                </div>
+                <div>
+                    <x-select label="Semua Pangkat" for="pangkat_id" wire="pangkat_id" wireType="change"
+                              placeholder="Semua Pangkat" :options="$pangkatData" :required="true" />
                 </div>
 
                 <div>

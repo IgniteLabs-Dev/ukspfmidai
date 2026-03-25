@@ -39,7 +39,7 @@
                         @csrf
 
                         <button
-                            class="block bg-[var(--danger)] rounded-full py-1 text-white px-2 w-full text-sm hover:bg-red-900 hover:cursor-pointer">Keluar
+                            class="block bg-[var(--danger)] rounded-md cursor-pointer py-1 text-white px-2 w-full text-sm hover:bg-red-900 hover:cursor-pointer">Keluar
                             </butt>
 
                     </form>

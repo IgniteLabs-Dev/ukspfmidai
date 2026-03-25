@@ -11,7 +11,8 @@
         <div class="flex-1">
             <x-select label="Tahun" for="tahun" wire="tahun" wireType="change" placeholder="Semua Tahun"
                 :options="$tahunData" :required="false" />
-        </div>        <div class="flex-1">
+        </div>
+        <div class="flex-1">
             <x-select label="Bulan" for="bulan" wire="bulan" wireType="change" placeholder="Semua Bulan"
                 :options="[
                     '1' => 'Januari',
@@ -89,11 +90,11 @@
                             </span>
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-900 flex justify-center gap-1">
-                            <button @click="$dispatch('open-pdf', { url: '{{ asset('files/'. $item->doc) }}' })"
+                            <button @click="$dispatch('open-pdf', { url: '{{ asset('files/cuti/'. $item->doc) }}' })"
                                     class="bg-[var(--primary)] text-white px-1 py-1 rounded-md hover:cursor-pointer hover:scale-105">
                                 <i class="fa-solid fa-eye"></i>
                             </button>
-                            <a href="{{ asset('files/'. $item->doc) }}" download
+                            <a href="{{ asset('files/cuti/'. $item->doc) }}" download
                                class="bg-[var(--warning)] text-white px-1 py-1 rounded-md hover:cursor-pointer hover:scale-105 inline-flex items-center">
                                 <i class="fa-solid fa-download"></i>
                             </a>
@@ -203,8 +204,8 @@
                                   placeholder="Masukkan alasan cuti..."></textarea>
                         @error('form.alasan') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                     </div>
-
-                    <div class="flex flex-row justify-between gap-2">                <!-- Tanggal Mulai -->
+                    <!-- Tanggal Mulai -->
+                    <div class="flex flex-row justify-between gap-2">
                         <div class="w-full">
                             <label class="block mb-1 text-sm font-medium text-gray-700">Tanggal Mulai</label>
                             <input type="date" wire:model="form.tanggal_mulai"

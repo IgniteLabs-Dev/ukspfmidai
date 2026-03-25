@@ -35,7 +35,7 @@ class PengajuanCuti extends Component
             'cuti_type_id' => 'required',
             'alasan' => 'nullable',
             'tanggal_start' => 'required',
-            'tanggal_end' => 'required',
+            'tanggal_end' => 'required|after_or_equal:tanggal_start',
             'doc' => 'required|file|mimes:pdf,doc,docx|max:10240',
         ]);
 
@@ -62,14 +62,24 @@ class PengajuanCuti extends Component
                 );
                 $extension = $this->doc->getClientOriginalExtension();
                 $timestamp = now()->format('Ymd_His');
-                $docName = $user->name . '_' . $timestamp . '.' . $extension;
+                $docName = $user->name .'_cuti_' . $timestamp . '.' . $extension;
 
-                $this->doc->storeAs('files', $docName, 'real_public');
+                $this->doc->storeAs('files/cuti/', $docName, 'real_public');
 
                 $data['doc'] = $docName;
             }
 
             $cuti = Cuti::create($data);
+
+            $approvalLevel = CutiApprovalLevel::all();
+
+            foreach ($approvalLevel as $index => $workflow) {
+                CutiApprovalWorkflow::create([
+                    'cuti_id' => $cuti->id,
+                    'approval_level_id' => $workflow->id,
+                    'status' => $index === 0 ? 'waiting' : 'pending',
+                ]);
+            }
 
             LivewireAlert::title('Pengajuan Cuti Berhasil!')
                 ->position('top-end')

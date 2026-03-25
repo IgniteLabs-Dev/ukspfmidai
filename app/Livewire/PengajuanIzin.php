@@ -10,11 +10,14 @@ use App\Services\CrudService;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Component;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+use Livewire\WithFileUploads;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class PengajuanIzin extends Component
 {
-    public $izin_type_id, $tanggal, $keperluan, $mulai_pukul, $sampai_pukul;
+    use WithFileUploads;
+    public $izin_type_id, $tanggal_mulai,$tanggal_selesai, $keperluan,$doc;
 
     public function render()
     {
@@ -29,10 +32,10 @@ class PengajuanIzin extends Component
 
         $this->validate([
             'izin_type_id' => 'required',
-            'tanggal' => 'required',
-            'keperluan' => 'required',
-            'mulai_pukul' => 'required',
-            'sampai_pukul' => 'required',
+            'tanggal_mulai' => 'required',
+            'tanggal_selesai' => 'required|after_or_equal:tanggal_mulai',
+            'keperluan' => 'nullable',
+            'doc' => 'required|file|mimes:pdf,doc,docx|max:10240',
         ]);
 
 
@@ -42,12 +45,25 @@ class PengajuanIzin extends Component
             $data = [
                 'user_id' => JWTAuth::parseToken()->authenticate()->id,
                 'izin_type_id' => $this->izin_type_id,
-                'tanggal' => $this->tanggal,
+                'tanggal_mulai' => $this->tanggal_mulai,
+                'tanggal_selesai' => $this->tanggal_selesai,
                 'keperluan' => $this->keperluan,
-                'mulai_pukul' => $this->mulai_pukul,
-                'sampai_pukul' => $this->sampai_pukul,
                 'status' => 'pending',
             ];
+
+            if (isset($this->doc) && $this->doc instanceof TemporaryUploadedFile) {
+                $originalName = pathinfo(
+                    $this->doc->getClientOriginalName(),
+                    PATHINFO_FILENAME
+                );
+                $extension = $this->doc->getClientOriginalExtension();
+                $timestamp = now()->format('Ymd_His');
+                $docName = $user->name .'_izin_' . $timestamp . '.' . $extension;
+
+                $this->doc->storeAs('files/izin/', $docName, 'real_public');
+
+                $data['doc'] = $docName;
+            }
 
             $izin = Izin::create($data);
 
@@ -72,6 +88,6 @@ class PengajuanIzin extends Component
     }
     public function resetInput()
     {
-        $this->reset(['izin_type_id', 'tanggal', 'keperluan', 'mulai_pukul', 'sampai_pukul']);
+        $this->reset(['izin_type_id', 'keperluan', 'tanggal_mulai', 'tanggal_selesai','doc']);
     }
 }

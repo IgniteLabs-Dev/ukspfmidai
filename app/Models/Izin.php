@@ -13,11 +13,11 @@ class Izin extends Model
         'user_id',
         'tanggal_acc',
         'izin_type_id',
-        'tanggal',
+        'tanggal_mulai',
+        'tanggal_selesai',
         'keperluan',
-        'mulai_pukul',
-        'sampai_pukul',
         'status',
+        'doc',
     ];
 
     public function izinType()

@@ -5,8 +5,8 @@
     <div class="relative flex items-center space-x-4">
         <div class="items-center flex flex-wrap">
             <ol
-                class="grid grid-flow-col auto-cols-fr overflow-hidden rounded-lg text-sm text-gray-600 me-3
-        {{ count($data) > 1 ? 'divide-x divide-gray-100 border border-gray-100' : 'border-0 divide-x-0' }}">
+                class="flex items-start grid grid-flow-col auto-cols-fr overflow-hidden rounded-lg text-sm text-gray-600 me-3
+        {{ count($data) > 1 ? 'divide-x divide-gray-100 ' : 'border-0 divide-x-0' }}">
 
                 @forelse ($data as $item)
                     <li class="relative  justify-center gap-2 p-4 odd:bg-gray-100 even:bg-gray-200">
@@ -65,18 +65,12 @@
                             </div>
                         @else
                             {{-- Mode edit --}}
-                            <div class="flex-col items-center gap-2">
+                            <div class="flex-row flex items-center gap-2">
                                 <div class="">
-                                    <x-select label="Pilih Jabatan" for="jabatan_id" wire="jabatan_id" :options="$jabatanTypes"
+                                    <x-select label="" placeholder="Pilih Jabatan" for="jabatan_id" wire="jabatan_id" :options="$jabatanTypes"
                                         :required="true" />
                                 </div>
-                                <div class="div">
-                                    <x-select label="Tanda Tangan" for="is_sign" wire="is_sign" :options="[
-                                        'true' => 'Ya',
-                                        'false' => 'Tidak',
-                                    ]"
-                                        :required="true" />
-                                </div>
+
                                 <div class="flex items-center gap-2 mt-2">
                                     <x-button wire:click="resetInput" bg="[var(--danger)]" px="1.5" py="1"
                                         label='<i class="fa-solid fa-sm fa-x"></i>' />
@@ -89,25 +83,18 @@
                     </li>
 
                 @empty
-                    <li class="p-4 text-center text-gray-600 bg-gray-50">
+                    <li class="p-4 text-center text-gray-600 bg-gray-50 flex items-center">
                         No steps available
                     </li>
                 @endforelse
                 @if ($mode == 'create')
                     <div class="px-3 w-auto items-center justify-between">
-                        <div class="flex-col items-center gap-2">
+                        <div class="flex-row flex items-center gap-2 border border-2 border-dashed bg-gray-100 border-gray-300 rounded-md p-2">
                             <div class="">
-                                <x-select label="Pilih Jabatan" for="jabatan_id" wire="jabatan_id" :options="$jabatanTypes"
+                                <x-select label="" placeholder="Pilih Jabatan" for="jabatan_id" wire="jabatan_id" :options="$jabatanTypes"
                                     :required="true" />
                             </div>
-                            <div class="div">
-                                <x-select label="Tanda Tangan" for="is_sign" wire="is_sign" :options="[
-                                    'true' => 'Ya',
-                                    'false' => 'Tidak',
-                                ]"
-                                    :required="true" />
-                            </div>
-                            <div class="flex items-center gap-2 mt-2">
+                            <div class="flex items-center gap-2 ">
                                 <x-button wire:click="resetInput()" bg="[var(--danger)]" px="1" py="1"
                                     label='<i class="fa-solid  fa-x"></i>' />
                                 <x-button wire:click="create" bg="[var(--success)]" px="1" py="1"

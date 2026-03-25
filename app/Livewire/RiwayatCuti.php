@@ -65,7 +65,8 @@ class RiwayatCuti extends Component
                 return $query->whereYear('created_at', $this->tahun);
             })
             ->when($this->bulan, function ($query) {
-                return $query->whereMonth('created_at', $this->bulan);
+                return $query->whereMonth('tanggal_start', $this->bulan)
+                    ->orWhereMonth('tanggal_end', $this->bulan);
             })
             ->when($this->cutiType, function ($query) {
                 return $query->where('cuti_type_id', $this->cutiType);
@@ -111,7 +112,7 @@ class RiwayatCuti extends Component
         if ($cuti->status == 'pending') {
             // hapus file
             if ($cuti->doc) {
-                $oldPath = public_path('files/' . $cuti->doc);
+                $oldPath = public_path('files/cuti/' . $cuti->doc);
                 if (file_exists($oldPath)) {
                     unlink($oldPath);
                 }
@@ -190,7 +191,7 @@ class RiwayatCuti extends Component
             // hapus file lama
             $oldDoc = Cuti::findOrFail($this->editId)->doc;
             if ($oldDoc) {
-                $oldPath = public_path('files/' . $oldDoc);
+                $oldPath = public_path('files/cuti/' . $oldDoc);
                 if (file_exists($oldPath)) {
                     unlink($oldPath);
                 }

@@ -16,10 +16,10 @@ return new class extends Migration
             $table->dateTime('tanggal_acc')->nullable();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->nullable();
             $table->foreignId('izin_type_id')->nullable()->constrained('izin_type')->onDelete('set null');
-            $table->date('tanggal')->nullable();
             $table->text('keperluan')->nullable();
-            $table->time('mulai_pukul')->nullable();
-            $table->time('sampai_pukul')->nullable();
+            $table->dateTime('tanggal_mulai');
+            $table->dateTime('tanggal_selesai');
+            $table->string('doc');
             $table->enum('status', ['pending', 'success', 'failed', 'menunggu_ketua']);
             $table->timestamps();
         });

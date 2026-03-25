@@ -2,6 +2,8 @@
 
 namespace App\Livewire;
 
+use App\Models\Jabatan;
+use App\Models\Pangkat;
 use App\Models\User;
 use App\Services\CrudService;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
@@ -18,7 +20,7 @@ class ManajemenUser extends Component
     public $editId = null;
     public $deleteId = null;
     public $filter = null;
-    public $name, $nip, $password, $role, $nomor_wa;
+    public $name, $nip, $password, $role, $jabatan_id, $pangkat_id, $nomor_wa;
 
 
     public function render()
@@ -27,16 +29,28 @@ class ManajemenUser extends Component
             $query->where(function ($subquery) {
                 $subquery->where('name', 'like', '%' . $this->filter . '%')
                     ->orWhere('nip', 'like', '%' . $this->filter . '%')
-                    ->orWhere('nomor_wa', 'like', '%' . $this->filter . '%');
+                    ->orWhere('nomor_wa', 'like', '%' . $this->filter . '%')
+                    ->orwherehas('jabatan', function ($jabatan) {
+                        $jabatan->where('name', 'like', '%' . $this->filter . '%');
+                    })
+                    ->orwherehas('pangkat', function ($pangkat) {
+                        $pangkat->where('name', 'like', '%' . $this->filter . '%');
+                    });
             });
         })
             ->orderBy('id', 'desc')
             ->paginate(10);
 
+        $jabatanData = Jabatan::where('status', 'active')
+            ->pluck('name', 'id')
+            ->toArray();
+
+        $pangkatData = Pangkat::where('status', 'active')
+            ->pluck('name', 'id')
+            ->toArray();
 
 
-
-        return view('livewire.manajemen-user', compact('data'))->extends('layouts.master');
+        return view('livewire.manajemen-user', compact('data', 'jabatanData', 'pangkatData'))->extends('layouts.master');
     }
     public function toggleMode()
     {
@@ -47,7 +61,7 @@ class ManajemenUser extends Component
         $this->mode = 'view';
         $this->resetValidation();
         $this->editId = null;
-        $this->reset(['name', 'nip', 'password', 'role', 'nomor_wa']);
+        $this->reset(['name', 'nip', 'password', 'role', 'jabatan_id', 'pangkat_id', 'nomor_wa']);
     }
     public function create(CrudService $crud)
     {
@@ -56,7 +70,9 @@ class ManajemenUser extends Component
             'nip' => 'required|string|max:20|unique:users,nip',
             'password' => 'required|string|min:1',
             'role' => 'required',
-            'nomor_wa' => 'nullable|string|max:15',
+            'jabatan_id' => 'required|integer',
+            'pangkat_id' => 'required|integer',
+            'nomor_wa' => 'required|string|max:15',
         ]);
 
         $data = [
@@ -64,6 +80,8 @@ class ManajemenUser extends Component
             'nip' => $this->nip,
             'password' => bcrypt($this->password),
             'role' => $this->role,
+            'jabatan_id' => $this->jabatan_id,
+            'pangkat_id' => $this->pangkat_id,
             'nomor_wa' => $this->nomor_wa,
         ];
 
@@ -78,6 +96,8 @@ class ManajemenUser extends Component
             $this->name = $user->name;
             $this->nip = $user->nip;
             $this->role = $user->role;
+            $this->jabatan_id = $user->jabatan_id;
+            $this->pangkat_id = $user->pangkat_id;
             $this->nomor_wa = $user->nomor_wa;
             $this->mode = 'edit';
             $this->editId = $id;
@@ -89,6 +109,8 @@ class ManajemenUser extends Component
             'name' => 'required|string|max:255',
             'nip' => 'required|string|max:20|unique:users,nip,' . $this->editId,
             'role' => 'required',
+            'jabatan_id' => 'required|integer|max:100',
+            'pangkat_id' => 'required|integer|max:100',
             'nomor_wa' => 'nullable|string|max:15',
         ]);
 
@@ -96,6 +118,8 @@ class ManajemenUser extends Component
             'name' => $this->name,
             'nip' => $this->nip,
             'role' => $this->role,
+            'jabatan_id' => $this->jabatan_id,
+            'pangkat_id' => $this->pangkat_id,
             'nomor_wa' => $this->nomor_wa,
 
         ];

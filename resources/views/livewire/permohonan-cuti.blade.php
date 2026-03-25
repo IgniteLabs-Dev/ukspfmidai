@@ -1,6 +1,6 @@
 <div class="bg-white rounded-xl p-4">
     <h2 class="text-2xl mb-5 font-bold text-center">
-        Riwayat Cuti
+        Permohonan Cuti
     </h2>
     <!-- Filters -->
     <div class="flex flex-col sm:flex-row gap-4 mb-6">
@@ -47,6 +47,8 @@
                     {{-- <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Preview</th> --}}
                     <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Dokumen</th>
+                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Aksi</th>
                 </tr>
             </thead>
@@ -57,12 +59,8 @@
                         <td class="px-6 py-4 text-sm text-gray-900">{{ $item->cuti->user->name }}</td>
                         <td class="px-6 py-4 text-sm text-gray-900">{{ $item->cuti->cutiType->name }}</td>
                         <td class="px-6 py-4 text-sm text-gray-900">
-                            @foreach (explode(',', $item->cuti->tanggal) as $tgl)
-                                <span
-                                    class="inline-block bg-[var(--info)] text-white text-xs font-semibold mb-0.5 px-1.5 py-0.5 rounded">
-                                    {{ trim($tgl) }}
-                                </span>
-                            @endforeach
+                            {{ \Carbon\Carbon::parse($item->tanggal_start)->translatedFormat('d F Y') }} 🠖
+                            {{ \Carbon\Carbon::parse($item->tanggal_end)->translatedFormat('d F Y') }}
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-900">{{ $item->cuti->alasan }}</td>
                         <td class="px-6 py-4 text-sm text-gray-900 flex justify-center">
@@ -83,26 +81,31 @@
                         <td class="px-6 py-4 text-sm text-gray-900  text-center  ">
                             <button wire:click="viewFlow({{ $item->cuti->id }})" type="button"
                                 data-modal-target="default-modal" data-modal-toggle="default-modal"
-                                class="text-white bg-[var(--info)] hover:brightness-90 hover:cursor-pointer font-medium rounded-lg text-sm px-1.5 py-1.5 me-2 "><i
+                                class="text-white cursor-pointer bg-[var(--info)] hover:brightness-90 hover:cursor-pointer font-medium rounded-lg text-sm px-1.5 py-1.5 me-2 "><i
                                     class="fa-solid fa-sitemap"></i></button>
                         </td>
-                        <td class="px-6 py-4 text-sm text-gray-900  gap-2 flex justify-center">
-                            <a href="{{ route('preview-cuti', $item->cuti->id) }}">
-                                <x-button bg="[var(--primary)]" px="2" py="1.5"
-                                    label='<i class="fa-solid fa-eye"></i> Detail' />
+                        <td class="px-6 py-4 text-sm text-gray-900  gap-1 flex justify-center">
+                            <button @click="$dispatch('open-pdf', { url: '{{ asset('files/cuti/'. $item->cuti->doc) }}' })"
+                                    class="bg-[var(--primary)] text-white px-1 py-1 rounded-md cursor-pointer hover:scale-105">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                            <a href="{{ asset('files/cuti/'. $item->cuti->doc) }}" download
+                               class="bg-[var(--warning)] text-white px-1 py-1 rounded-md cursor-pointer hover:scale-105 inline-flex items-center">
+                                <i class="fa-solid fa-download"></i>
                             </a>
+
                         </td>
-                        {{-- <td class="px-6 py-4 text-sm text-gray-900 gap-2">
+                     <td class="px-6 py-4 text-sm text-gray-900 gap-2">
                             @if ($item->status === 'waiting')
                                 <x-button wire:click="reject({{ $item->cuti->id }})" bg="[var(--danger)]" px="1.5"
-                                    py="1.5" label='<i class="fa-solid fa-circle-xmark"></i>' />
-                                <x-button wire:click="approve({{ $item->cuti->id }})" bg="[var(--success)]"
-                                    px="1.5" py="1.5" label='<i class="fa-solid fa-circle-check"></i>' />
+                                    py="1"  wire:confirm="Apakah anda yakin?" label='<i class="fa-solid fa-circle-xmark"></i>' />
+                                <x-button wire:confirm="Apakah anda yakin?" wire:click="approve({{ $item->cuti->id }})" bg="[var(--success)]"
+                                    px="1" py="1" label='<i class="fa-solid fa-circle-check"></i>' />
                             @else
-                                <x-button wire:click="backToWaiting({{ $item->cuti->id }})" bg="[var(--warning)]"
-                                    px="1.5" py="1.5" label='<i class="fa-solid fa-clock"></i>' />
+                                <x-button wire:confirm="Apakah anda yakin?" wire:click="backToWaiting({{ $item->cuti->id }})" bg="[var(--warning)]"
+                                    px="1" py="1" label='<i class="fa-solid fa-clock"></i>' />
                             @endif
-                        </td> --}}
+                        </td>
                     </tr>
                 @empty
                     <tr>
@@ -129,13 +132,9 @@
                         Tahapan Approval Cuti
                     </h3>
                     <button type="button"
-                        class="text-gray-400 hover:cursor-pointer bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center "
+                        class="text-gray-700 cursor-pointer bg-gray-300 hover:cursor-pointer  hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center "
                         data-modal-hide="default-modal">
-                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                        </svg>
+                        <i class="fa-solid fa-xmark fa-xl"></i>
                         <span class="sr-only">Close modal</span>
                     </button>
                 </div>
@@ -221,5 +220,43 @@
 
             </div>
         </div>
+    </div>
+
+    <div x-data="{ viewPDF: false, pdfUrl: '', editModal: false }"
+         @open-pdf.window="viewPDF = true; pdfUrl = $event.detail.url"
+         @open-edit.window="editModal = true"
+         @close-edit.window="editModal = false">
+
+        <div wire:ignore>
+
+
+            <!-- Backdrop PDF -->
+            <div x-show="viewPDF" x-cloak @click="viewPDF = false"
+                 class="fixed inset-0 bg-black/50 z-40">
+            </div>
+
+            <!-- Modal PDF -->
+            <div x-show="viewPDF" x-cloak
+                 class="fixed inset-0 z-50 flex items-center justify-center p-4">
+                <div class="bg-white rounded-xl shadow-xl w-full max-w-4xl h-[90vh] flex flex-col">
+                    <div class="flex items-center justify-between p-4 border-b border-gray-200 shrink-0">
+                        <h3 class="text-lg font-semibold text-gray-800">Preview Dokumen</h3>
+                        <button @click="viewPDF = false; pdfUrl = ''"
+                                class="text-gray-600 px-0 py-1 cursor-pointer bg-gray-300 rounded-md hover:text-gray-600 transition">
+                            <i class="fa-solid fa-xmark fa-xl"></i>
+                        </button>
+                    </div>
+                    <div class="flex-1 overflow-hidden p-0">
+                        <iframe
+                            :src="`/pdfjs/web/viewer.html?file=${encodeURIComponent(pdfUrl)}`"
+                            class="w-full h-full rounded-md border border-gray-200">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
     </div>
 </div>

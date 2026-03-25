@@ -5,16 +5,18 @@
 
     <div class="w-full">
         <!-- Jenis Cuti -->
+        <div class="mb-3">
         <x-select label="Jenis Cuti" for="cuti_type_id" wire="cuti_type_id" :options="$cutiTypes" :required="true" />
+        </div>
         <!-- Tanggal Cuti -->
-        <div class="mb-4 flex gap-2 mt-2">
+        <div class="mb-3 flex gap-2 ">
             <x-input label="Tanggal Mulai" for="tanggal_start" wire="tanggal_start" type="date" placeholder="Tanggal" :required="true" />
 
             <x-input label="Tanggal Selesai" for="tanggal_end" wire="tanggal_end" type="date" placeholder="Tanggal" :required="true" />
         </div>
 
         <div class="mb-3">
-            <label for="doc" class="block mb-2 text-sm font-medium text-gray-900">Dokumen
+            <label for="doc" class="block mb-1 text-sm font-medium text-gray-900">Dokumen
                 <span class="text-red-500">*</span>
             </label>
             <input type="file" id="doc" wire:model="doc" accept=".pdf,.doc,.docx" class="bg-gray-50 w-full rounded-md file:bg-gray-400 file:text-white border-1 border-gray-200 cursor-pointer" />
