@@ -88,6 +88,7 @@ class PengajuanCuti extends Component
                 ->show();
 
             $this->resetInput();
+            redirect()->route('riwayat-cuti');
         });
     }
     public function resetInput()

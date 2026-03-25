@@ -61,8 +61,6 @@
                         Status</th>
                     <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Proses</th>
-                    {{-- <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Preview</th> --}}
                     <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Dokumen</th>
                     <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -76,13 +74,13 @@
                         <td class="px-6 py-4 text-sm text-gray-900">{{ $item->cuti->user->name }}</td>
                         <td class="px-6 py-4 text-sm text-gray-900">{{ $item->cuti->cutiType->name }}</td>
                         <td class="px-6 py-4 text-sm text-gray-900">
-                            {{ \Carbon\Carbon::parse($item->tanggal_start)->translatedFormat('d F Y') }} 🠖
-                            {{ \Carbon\Carbon::parse($item->tanggal_end)->translatedFormat('d F Y') }}
+                            {{ \Carbon\Carbon::parse($item->cuti->tanggal_start)->locale('id')->translatedFormat('d F Y') }} 🠖
+                            {{ \Carbon\Carbon::parse($item->cuti->tanggal_end)->locale('id')->translatedFormat('d F Y') }}
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-900">{{ $item->cuti->alasan }}</td>
-                        <td class="px-6 py-4 text-sm text-gray-900 flex justify-center">
+                        <td class="px-6 py-4 text-sm text-gray-900 flex justify-center ">
                             <span
-                                class="px-3 py-1 rounded-full text-white text-xs font-semibold
+                                class="px-3 py-1 rounded-full text-white text-center text-xs my-1 font-semibold
                                     @if ($item->status === 'success') bg-[var(--success)]
                                     @elseif ($item->status === 'failed') bg-[var(--danger)]
                                     @else bg-[var(--warning)] @endif">
@@ -101,7 +99,8 @@
                                 class="text-white cursor-pointer bg-[var(--info)] hover:brightness-90 hover:cursor-pointer font-medium rounded-lg text-sm px-1.5 py-1.5 me-2 "><i
                                     class="fa-solid fa-sitemap"></i></button>
                         </td>
-                        <td class="px-6 py-4 text-sm text-gray-900  gap-1 flex justify-center">
+                        <td class="px-6 py-4 text-sm text-gray-900   ">
+                            <div class="flex justify-center gap-1">
                             <button @click="$dispatch('open-pdf', { url: '{{ asset('files/cuti/'. $item->cuti->doc) }}' })"
                                     class="bg-[var(--primary)] text-white px-1 py-1 rounded-md cursor-pointer hover:scale-105">
                                 <i class="fa-solid fa-eye"></i>
@@ -110,23 +109,27 @@
                                class="bg-[var(--warning)] text-white px-1 py-1 rounded-md cursor-pointer hover:scale-105 inline-flex items-center">
                                 <i class="fa-solid fa-download"></i>
                             </a>
+                            </div>
 
                         </td>
-                     <td class="px-6 py-4 text-sm text-gray-900 gap-2">
-                            @if ($item->status === 'waiting')
-                                <x-button wire:click="reject({{ $item->cuti->id }})" bg="[var(--danger)]" px="1.5"
-                                    py="1"  wire:confirm="Apakah anda yakin?" label='<i class="fa-solid fa-circle-xmark"></i>' />
-                                <x-button wire:confirm="Apakah anda yakin?" wire:click="approve({{ $item->cuti->id }})" bg="[var(--success)]"
-                                    px="1" py="1" label='<i class="fa-solid fa-circle-check"></i>' />
-                            @else
-                                <x-button wire:confirm="Apakah anda yakin?" wire:click="backToWaiting({{ $item->cuti->id }})" bg="[var(--warning)]"
-                                    px="1" py="1" label='<i class="fa-solid fa-clock"></i>' />
-                            @endif
-                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-900   ">
+                            <div class="flex justify-center gap-1">
+
+                                @if ($item->status === 'waiting')
+                                    <x-button wire:click="reject({{ $item->cuti->id }})" bg="[var(--danger)]" px="1"
+                                        py="1"  wire:confirm="Apakah anda yakin?" label='<i class="fa-solid fa-circle-xmark"></i>' />
+                                    <x-button wire:confirm="Apakah anda yakin?" wire:click="approve({{ $item->cuti->id }})" bg="[var(--success)]"
+                                        px="1" py="1" label='<i class="fa-solid fa-circle-check"></i>' />
+                                @else
+                                    <x-button wire:confirm="Apakah anda yakin?" wire:click="backToWaiting({{ $item->cuti->id }})" bg="[var(--warning)]"
+                                        px="1" py="1" label='<i class="fa-solid fa-clock"></i>' />
+                                @endif
+                            </div>
+                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500 bg-gray-50">
+                        <td colspan="9" class="px-6 py-4 text-center text-sm text-gray-500 bg-gray-50">
                             Data Tidak Ada
                         </td>
                     </tr>
@@ -272,8 +275,5 @@
                 </div>
             </div>
         </div>
-
-
-
     </div>
 </div>

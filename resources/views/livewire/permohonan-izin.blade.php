@@ -53,15 +53,17 @@
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jenis
                         Izin</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Tanggal</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Keperluan</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Status</th>
                     <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Proses</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Dokumen</th>
+                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Aksi</th>
                 </tr>
             </thead>
@@ -72,13 +74,13 @@
                         <td class="px-6 py-4 text-sm text-gray-900">{{ $item->izin->user->name }}</td>
                         <td class="px-6 py-4 text-sm text-gray-900">{{ $item->izin->izinType->name }}</td>
                         <td class="px-6 py-4 text-sm text-gray-900">
-                            {{ \Carbon\Carbon::parse($item->tanggal_mulai)->translatedFormat('d F Y, H:i') }} 🠖
-                            {{ \Carbon\Carbon::parse($item->tanggal_selesai)->translatedFormat('d F Y, H:i') }}
+                            {{ \Carbon\Carbon::parse($item->izin->tanggal_mulai)->locale('id')->translatedFormat('d F Y') }} 🠖
+                            {{ \Carbon\Carbon::parse($item->izin->tanggal_selesai)->locale('id')->translatedFormat('d F Y') }}
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-900">{{ $item->izin->keperluan }}</td>
-                        <td class="px-6 py-4 text-sm text-gray-900">
+                        <td class="px-6 py-4 text-sm text-gray-900 flex justify-center items-center">
                             <span
-                                class="px-3 py-1 rounded-full text-white text-xs font-semibold
+                                class="px-3 py-1 rounded-full text-white text-center text-xs my-1 font-semibold
                                     @if ($item->status === 'success') bg-[var(--success)]
                                     @elseif ($item->status === 'failed') bg-[var(--danger)]
                                     @else bg-[var(--warning)] @endif">
@@ -92,12 +94,29 @@
                             </span>
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-900  text-center  ">
+                            <div class="flex justify-center gap-1">
                             <button  wire:click="viewFlow({{ $item->izin->id }})" type="button"
                                     data-modal-target="default-modal" data-modal-toggle="default-modal"
-                                    class="text-white cursor-pointer bg-[var(--info)] hover:brightness-90 hover:cursor-pointer font-medium rounded-lg text-sm px-1.5 py-1.5 me-2 "><i
+                                    class="text-white cursor-pointer bg-[var(--info)] hover:brightness-90 hover:cursor-pointer font-medium rounded-lg text-sm px-1.5 py-1.5  "><i
                                     class="fa-solid fa-sitemap"></i></button>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-900   ">
+                            <div class="flex justify-center gap-1">
+
+                                <button @click="$dispatch('open-pdf', { url: '{{ asset('files/izin/'. $item->izin->doc) }}' })"
+                                        class="bg-[var(--primary)] text-white px-1 py-1 rounded-md cursor-pointer hover:scale-105">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+                                <a href="{{ asset('files/izin/'. $item->izin->doc) }}" download
+                                   class="bg-[var(--warning)] text-white px-1 py-1 rounded-md cursor-pointer hover:scale-105 inline-flex items-center">
+                                    <i class="fa-solid fa-download"></i>
+                                </a>
+                            </div>
+
                         </td>
                      <td class="px-6 py-4 text-sm text-gray-900">
+                         <div class="flex justify-center gap-1">
                             @if ($item->status === 'waiting')
                                 <x-button wire:confirm="Apakah anda yakin?" wire:click="reject({{ $item->izin->id }})" bg="[var(--danger)]" px="1"
                                     py="1" label='<i class="fa-solid fa-circle-xmark"></i>' />
@@ -107,6 +126,7 @@
                                 <x-button wire:confirm="Apakah anda yakin?" wire:click="backToWaiting({{ $item->izin->id }})" bg="[var(--warning)]"
                                     px="1" py="1" label='<i class="fa-solid fa-clock"></i>' />
                             @endif
+                         </div>
                         </td>
                     </tr>
                 @empty
@@ -217,6 +237,41 @@
 
                 </div>
 
+            </div>
+        </div>
+    </div>
+
+    <div x-data="{ viewPDF: false, pdfUrl: '', editModal: false }"
+         @open-pdf.window="viewPDF = true; pdfUrl = $event.detail.url"
+         @open-edit.window="editModal = true"
+         @close-edit.window="editModal = false">
+
+        <div wire:ignore>
+
+
+            <!-- Backdrop PDF -->
+            <div x-show="viewPDF" x-cloak @click="viewPDF = false"
+                 class="fixed inset-0 bg-black/50 z-40">
+            </div>
+
+            <!-- Modal PDF -->
+            <div x-show="viewPDF" x-cloak
+                 class="fixed inset-0 z-50 flex items-center justify-center p-4">
+                <div class="bg-white rounded-xl shadow-xl w-full max-w-4xl h-[90vh] flex flex-col">
+                    <div class="flex items-center justify-between p-4 border-b border-gray-200 shrink-0">
+                        <h3 class="text-lg font-semibold text-gray-800">Preview Dokumen</h3>
+                        <button @click="viewPDF = false; pdfUrl = ''"
+                                class="text-gray-600 px-0 py-1 cursor-pointer bg-gray-300 rounded-md hover:text-gray-600 transition">
+                            <i class="fa-solid fa-xmark fa-xl"></i>
+                        </button>
+                    </div>
+                    <div class="flex-1 overflow-hidden p-0">
+                        <iframe
+                            :src="`/pdfjs/web/viewer.html?file=${encodeURIComponent(pdfUrl)}`"
+                            class="w-full h-full rounded-md border border-gray-200">
+                        </iframe>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

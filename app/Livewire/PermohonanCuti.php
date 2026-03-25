@@ -31,14 +31,37 @@ class PermohonanCuti extends Component
 
     public function render()
     {
-        $tahunData = Tahun::where('status', 'active')
-            ->pluck('tahun', 'tahun')
+        $user = JWTAuth::parseToken()->authenticate();
+        $tahunData = CutiApprovalWorkflow::with(['cuti.user', 'approvalLevel'])
+            ->whereHas('approvalLevel', function ($query) use ($user) {
+                $query->where('jabatan_id', $user->jabatan_id);
+            })->get();
+
+        $tahunData = $tahunData->map(function ($item) {
+            return $item->cuti->tanggal_start ?? null;
+        })
+            ->merge(
+                $tahunData->map(function ($item) {
+                    return $item->cuti->tanggal_end ?? null;
+                })
+            )
+            ->filter()
+            ->map(function ($tanggal) {
+                return date('Y', strtotime($tanggal));
+            })
+            ->unique()
+            ->sort()
+            ->mapWithKeys(function ($year) {
+                return [$year => $year];
+            })
             ->toArray();
+
+
         $cutiTypesData = CutiType::where('status', 'active')
             ->pluck('name', 'id')
             ->toArray();
 
-        $user = JWTAuth::parseToken()->authenticate();
+
 
         $approvalList = CutiApprovalWorkflow::wherehas('approvalLevel', function ($query) use ($user) {
             $query->where('jabatan_id', $user->jabatan_id);

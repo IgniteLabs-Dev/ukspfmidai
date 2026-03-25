@@ -35,8 +35,10 @@ class Dashboard extends Component
         $permohonanCutiSuccess = $service->CutiCount('success');
         $permohonanCutiFailed = $service->CutiCount('failed');
 
+        $cutiIzinApprover = $service->IsApprovalUser();
 
 
-        return view('livewire.dashboard', compact( 'CutiPending', 'CutiSuccess', 'CutiFailed', 'CutiKetua', 'IzinPending', 'IzinSuccess', 'IzinFailed', 'permohonanIzinWaiting', 'permohonanIzinSuccess', 'permohonanIzinFailed', 'permohonanCutiWaiting', 'permohonanCutiSuccess', 'permohonanCutiFailed'))->extends('layouts.master');
+
+        return view('livewire.dashboard', compact( 'CutiPending', 'CutiSuccess', 'CutiFailed', 'CutiKetua', 'IzinPending', 'IzinSuccess', 'IzinFailed', 'permohonanIzinWaiting', 'permohonanIzinSuccess', 'permohonanIzinFailed', 'permohonanCutiWaiting', 'permohonanCutiSuccess', 'permohonanCutiFailed','cutiIzinApprover'))->extends('layouts.master');
     }
 }

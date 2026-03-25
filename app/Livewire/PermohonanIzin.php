@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\CutiApprovalWorkflow;
 use App\Models\Izin;
 use App\Models\IzinApprovalWorkflow;
 use App\Models\IzinType;
@@ -31,14 +32,35 @@ class PermohonanIzin extends Component
 
     public function render()
     {
-        $tahunData = Tahun::where('status', 'active')
-            ->pluck('tahun', 'tahun')
+
+        $user = JWTAuth::parseToken()->authenticate();
+        $tahunData = IzinApprovalWorkflow::with(['izin.user', 'approvalLevel'])
+            ->whereHas('approvalLevel', function ($query) use ($user) {
+                $query->where('jabatan_id', $user->jabatan_id);
+            })->get();
+
+        $tahunData = $tahunData->map(function ($item) {
+            return $item->izin->tanggal_mulai ?? null;
+        })
+            ->merge(
+                $tahunData->map(function ($item) {
+                    return $item->izin->tanggal_selesai ?? null;
+                })
+            )
+            ->filter()
+            ->map(function ($tanggal) {
+                return date('Y', strtotime($tanggal));
+            })
+            ->unique()
+            ->sort()
+            ->mapWithKeys(function ($year) {
+                return [$year => $year];
+            })
             ->toArray();
+
         $izinTypesData = IzinType::where('status', 'active')
             ->pluck('name', 'id')
             ->toArray();
-
-        $user = JWTAuth::parseToken()->authenticate();
 
         $approvalList = IzinApprovalWorkflow::wherehas('approvalLevel', function ($query) use ($user) {
             $query->where('jabatan_id', $user->jabatan_id);

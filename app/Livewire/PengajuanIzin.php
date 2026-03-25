@@ -84,6 +84,7 @@ class PengajuanIzin extends Component
                 ->show();
 
             $this->resetInput();
+            redirect()->route('riwayat-izin');
         });
     }
     public function resetInput()
