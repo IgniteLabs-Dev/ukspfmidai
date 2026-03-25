@@ -54,7 +54,18 @@ class PermohonanCuti extends Component
             })
             ->when($this->status, fn($q) => $q->where('status', $this->status))
             ->when(!$this->status, fn($q) => $q->where('status', '!=', 'pending'))
-            ->when($this->tahun, fn($q) => $q->whereHas('cuti', fn($q2) => $q2->whereYear('created_at', $this->tahun)))
+            ->when($this->tahun, function ($query) {
+                $query->whereHas('cuti', function ($q) {
+                    $q->whereYear('tanggal_start', $this->tahun)
+                        ->orWhereYear('tanggal_end', $this->tahun);
+                });
+            })
+            ->when($this->bulan, function ($query) {
+                $query->whereHas('cuti', function ($q) {
+                    $q->whereMonth('tanggal_start', $this->bulan)
+                        ->orWhereMonth('tanggal_end', $this->bulan);
+                });
+            })
             ->when($this->cutiType, fn($q) => $q->whereHas('cuti', fn($q2) => $q2->where('cuti_type_id', $this->cutiType)))
             ->when($this->filter, function ($query) {
                 $query->whereHas('cuti', function ($q2) {

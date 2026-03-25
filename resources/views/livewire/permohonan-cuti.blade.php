@@ -13,6 +13,23 @@
                 :options="$tahunData" :required="false" />
         </div>
         <div class="flex-1">
+            <x-select label="Bulan" for="bulan" wire="bulan" wireType="change" placeholder="Semua Bulan"
+                      :options="[
+                    '1' => 'Januari',
+                    '2' => 'Februari',
+                    '3' => 'Maret',
+                    '4' => 'April',
+                    '5' => 'Mei',
+                    '6' => 'Juni',
+                    '7' => 'Juli',
+                    '8' => 'Agustus',
+                    '9' => 'September',
+                    '10' => 'Oktober',
+                    '11' => 'November',
+                    '12' => 'Desember',
+                ]" :required="false" />
+        </div>
+        <div class="flex-1">
             <x-select label="Status" for="status" wire="status" wireType="change" placeholder="Semua Status"
                 :options="[
                     'failed' => 'Ditolak',

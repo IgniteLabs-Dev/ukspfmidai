@@ -13,6 +13,23 @@
                 :options="$tahunData" :required="false" />
         </div>
         <div class="flex-1">
+            <x-select label="Bulan" for="bulan" wire="bulan" wireType="change" placeholder="Semua Bulan"
+                      :options="[
+                    '1' => 'Januari',
+                    '2' => 'Februari',
+                    '3' => 'Maret',
+                    '4' => 'April',
+                    '5' => 'Mei',
+                    '6' => 'Juni',
+                    '7' => 'Juli',
+                    '8' => 'Agustus',
+                    '9' => 'September',
+                    '10' => 'Oktober',
+                    '11' => 'November',
+                    '12' => 'Desember',
+                ]" :required="false" />
+        </div>
+        <div class="flex-1">
             <x-select label="Status" for="status" wire="status" wireType="change" placeholder="Semua Status"
                 :options="[
                     'failed' => 'Ditolak',
@@ -55,12 +72,8 @@
                         <td class="px-6 py-4 text-sm text-gray-900">{{ $item->izin->user->name }}</td>
                         <td class="px-6 py-4 text-sm text-gray-900">{{ $item->izin->izinType->name }}</td>
                         <td class="px-6 py-4 text-sm text-gray-900">
-                            @foreach (explode(',', $item->izin->tanggal) as $tgl)
-                                <span
-                                    class="inline-block bg-[var(--info)] text-white text-xs font-semibold mb-0.5 px-1.5 py-0.5 rounded">
-                                    {{ trim($tgl) }}
-                                </span>
-                            @endforeach
+                            {{ \Carbon\Carbon::parse($item->tanggal_mulai)->translatedFormat('d F Y, H:i') }} 🠖
+                            {{ \Carbon\Carbon::parse($item->tanggal_selesai)->translatedFormat('d F Y, H:i') }}
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-900">{{ $item->izin->keperluan }}</td>
                         <td class="px-6 py-4 text-sm text-gray-900">
@@ -78,29 +91,23 @@
                                 @endif
                             </span>
                         </td>
-                        <td class="px-6 py-4 text-sm text-gray-900 text-center">
-                            <button wire:click="viewFlow({{ $item->izin->id }})" type="button"
-                                data-modal-target="default-modal" data-modal-toggle="default-modal"
-                                class="text-white bg-[var(--info)] hover:brightness-90 hover:cursor-pointer font-medium rounded-lg text-sm px-1.5 py-1.5 me-2 mb-2"><i
+                        <td class="px-6 py-4 text-sm text-gray-900  text-center  ">
+                            <button  wire:click="viewFlow({{ $item->izin->id }})" type="button"
+                                    data-modal-target="default-modal" data-modal-toggle="default-modal"
+                                    class="text-white cursor-pointer bg-[var(--info)] hover:brightness-90 hover:cursor-pointer font-medium rounded-lg text-sm px-1.5 py-1.5 me-2 "><i
                                     class="fa-solid fa-sitemap"></i></button>
                         </td>
-                        <td class="px-6 py-4 text-sm text-gray-900">
-                            <a href="{{ route('preview-izin', $item->izin->id) }}">
-                                <x-button bg="[var(--primary)]" px="2" py="1.5"
-                                    label='<i class="fa-solid fa-eye"></i> Detail' />
-                            </a>
-                        </td>
-                        {{-- <td class="px-6 py-4 text-sm text-gray-900">
+                     <td class="px-6 py-4 text-sm text-gray-900">
                             @if ($item->status === 'waiting')
-                                <x-button wire:click="reject({{ $item->izin->id }})" bg="[var(--danger)]" px="1.5"
-                                    py="1.5" label='<i class="fa-solid fa-circle-xmark"></i>' />
-                                <x-button wire:click="approve({{ $item->izin->id }})" bg="[var(--success)]"
-                                    px="1.5" py="1.5" label='<i class="fa-solid fa-circle-check"></i>' />
+                                <x-button wire:confirm="Apakah anda yakin?" wire:click="reject({{ $item->izin->id }})" bg="[var(--danger)]" px="1"
+                                    py="1" label='<i class="fa-solid fa-circle-xmark"></i>' />
+                                <x-button wire:confirm="Apakah anda yakin?" wire:click="approve({{ $item->izin->id }})" bg="[var(--success)]"
+                                    px="1" py="1" label='<i class="fa-solid fa-circle-check"></i>' />
                             @else
-                                <x-button wire:click="backToWaiting({{ $item->izin->id }})" bg="[var(--warning)]"
-                                    px="1.5" py="1.5" label='<i class="fa-solid fa-clock"></i>' />
+                                <x-button wire:confirm="Apakah anda yakin?" wire:click="backToWaiting({{ $item->izin->id }})" bg="[var(--warning)]"
+                                    px="1" py="1" label='<i class="fa-solid fa-clock"></i>' />
                             @endif
-                        </td> --}}
+                        </td>
                     </tr>
                 @empty
                     <tr>
@@ -126,13 +133,9 @@
                         Tahapan Approval Izin
                     </h3>
                     <button type="button"
-                        class="text-gray-400 hover:cursor-pointer bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center "
-                        data-modal-hide="default-modal">
-                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                        </svg>
+                            class="text-gray-700 cursor-pointer bg-gray-300 hover:cursor-pointer  hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center "
+                            data-modal-hide="default-modal">
+                        <i class="fa-solid fa-xmark fa-xl"></i>
                         <span class="sr-only">Close modal</span>
                     </button>
                 </div>

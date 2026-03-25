@@ -48,6 +48,7 @@ class PermohonanIzin extends Component
             })
             ->pluck('izin_id')
             ->toArray();
+
         $data = IzinApprovalWorkflow::with('izin', 'approvalLevel')
             ->wherehas('approvalLevel', function ($query) use ($user) {
                 $query->where('jabatan_id', $user->jabatan_id);
@@ -57,7 +58,16 @@ class PermohonanIzin extends Component
             })
             ->when(!$this->status, fn($q) => $q->where('status', '!=', 'pending'))
             ->when($this->tahun, function ($query) {
-                return $query->whereYear('izin.created_at', $this->tahun);
+                $query->whereHas('izin', function ($q) {
+                    $q->whereYear('tanggal_mulai', $this->tahun)
+                    ->orWhereYear('tanggal_selesai', $this->tahun);
+                });
+            })
+            ->when($this->bulan, function ($query) {
+                $query->whereHas('izin', function ($q) {
+                    $q->whereMonth('tanggal_mulai', $this->bulan)
+                        ->orWhereMonth('tanggal_selesai', $this->bulan);
+                });
             })
             ->when($this->izinType, function ($query) {
                 return $query->where('izin.izin_type_id', $this->izinType);
