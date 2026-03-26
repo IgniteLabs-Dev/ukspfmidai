@@ -1,6 +1,6 @@
 <div>
     <div class="bg-white rounded-xl p-4">
-        <div class="p-3 border rounded-xl bg-gray-50 border-gray-300 mb-3">
+        <div class="  rounded-xl  ">
             <!-- Riwayat Cuti -->
             <h2 class="text-2xl font-semibold mb-3">Riwayat Cuti</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
@@ -114,7 +114,7 @@
             </div>
         </div>
         @if ($cutiIzinApprover['is_cuti_approver'] == true || $cutiIzinApprover['is_izin_approver'] == true)
-        <div class="p-3 border rounded-xl bg-gray-50 border-gray-300">
+        <div class="p-3 border rounded-xl bg-gray-50 border-gray-300 mt-3">
             @if ($cutiIzinApprover['is_cuti_approver'] == true)
             <!-- Permohonan cuti -->
             <h2 class="text-2xl font-semibold mb-3">Permohonan Cuti</h2>
