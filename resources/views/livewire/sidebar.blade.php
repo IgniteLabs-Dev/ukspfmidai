@@ -4,9 +4,9 @@
         aria-label="Sidebar">
         <div class="h-full px-4 py-4 overflow-y-auto bg-white">
 
-            <a href="https://flowbite.com" class="flex mr-4">
-                <img src="{{ asset('img/logo.png') }}" class="mr-3 h-8" alt="FlowBite Logo" />
-                <span class="self-center text-2xl font-semibold whitespace-nowrap">Flowbite</span>
+            <a href="" class="flex mr-4">
+                <img src="{{ asset('img/logo.png') }}" class="mr-3 h-8" alt="UKSPFMIDAI" />
+                <span class="self-center text-2xl font-semibold whitespace-nowrap">UKSPFMIDAI</span>
             </a>
             <ul class="space-y-2 font-medium mt-6">
                 <li>

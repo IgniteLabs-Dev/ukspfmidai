@@ -33,7 +33,7 @@ class ManajemenUser extends Component
                     ->orwherehas('jabatan', function ($jabatan) {
                         $jabatan->where('name', 'like', '%' . $this->filter . '%');
                     })
-                    ->orwherehas('pangkat', function ($pangkat) {
+                    ->orwherehas('pangkatRef', function ($pangkat) {
                         $pangkat->where('name', 'like', '%' . $this->filter . '%');
                     });
             });

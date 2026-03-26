@@ -5,7 +5,7 @@
     <div class="w-full">
         <!-- Jenis Izin -->
         <div class="mb-3">
-        <x-select label="Jenis Cuti" for="izin_type_id" wire="izin_type_id" :options="$izinTypes" :required="true" />
+        <x-select label="Jenis Izin" for="izin_type_id" wire="izin_type_id" :options="$izinTypes" :required="true" />
         </div>
 
         <!-- Tanggal Izin -->

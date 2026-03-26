@@ -9,7 +9,7 @@
                         <img src="data:image/png;base64,{{ $logoData }}" alt="logo"
                             style="width:80px; height:auto;">
                     @else
-                        <img src="{{ asset('images/logo_kab_mamuju.png') }}" alt=""
+                        <img src="{{ asset('images/logo.png') }}" alt=""
                             style="width: 80px; height: auto;">
                     @endif
                 </div>

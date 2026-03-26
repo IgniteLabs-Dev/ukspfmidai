@@ -6,8 +6,8 @@
         <div class="flex flex-wrap justify-between items-center">
             <div class="flex justify-start items-center">
                 <a href="/" class="flex gap-2 items-center">
-                    <img src="{{ asset('images/logo_kab_mamuju.png') }}" class="h-8" alt="">
-                    <h2 class="font-bold">SiapBPKAD Mamuju</h2>
+                    <img src="{{ asset('images/logo.png') }}" class="h-8" alt="">
+                    <h2 class="font-bold">UKSPFMIDAI</h2>
                 </a>
 
                 <button aria-expanded="true" aria-controls="sidebar"

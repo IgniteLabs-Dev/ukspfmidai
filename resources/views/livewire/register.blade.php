@@ -6,12 +6,11 @@
                 <div class="w-full max-w-md">
                     <div class="bg-white shadow-lg rounded-xl">
                         <div class="p-6">
-                            <img src="{{ asset('images/logo_kab_mamuju.png') }}" width="100" alt=""
+                            <img src="{{ asset('images/logo.png') }}" width="100" alt=""
                                 class="mx-auto" />
-                            <h4 class="text-center font-bold text-xl mb-1">SiapBPKAD Mamuju</h4>
+                            <h4 class="text-center font-bold text-xl mb-1">UKSPFMIDAI</h4>
                             <p class="text-center text-gray-600 mb-6">
-                                Sistem Informasi dokumen perizinan dan cuti kepegawaian dan kantoor BPKAD di Kabupaten
-                                Memuju
+                                Sistem Informasi dokumen perizinan dan cuti kepegawaian
                             </p>
 
                             <div>
