@@ -276,4 +276,128 @@
             </div>
         </div>
     </div>
+    <button wire:anow-confirm.prompt="Are you sure?\n\nType DELETE to confirm|DELETE" wire:click="testFunction">Click here</button>
+
+
+    @push('scripts')
+        <script>
+            document.addEventListener('livewire:init', () => {
+                Livewire.directive('anow-confirm', ({
+                                                        el
+                                                        , directive
+                                                    }) => {
+                    let message = directive.expression.replaceAll('\\n', '\n') || "{{ __('Are you sure?') }}";
+                    let shouldPrompt = directive.modifiers.includes('prompt');
+
+                    el.__livewire_confirm = (action, instead) => {
+                        const createModal = (content) => {
+                            const backdrop = document.createElement('div');
+                            backdrop.className = 'fixed inset-0 bg-black bg-opacity-50 z-40';
+
+                            const modal = document.createElement('div');
+                            modal.className = 'fixed inset-0 flex items-center justify-center z-50';
+                            modal.innerHTML = content;
+
+                            document.body.appendChild(backdrop);
+                            document.body.appendChild(modal);
+                            return {
+                                modal
+                                , backdrop
+                            };
+                        };
+
+                        const removeModal = (backdrop, modal) => {
+                            document.body.removeChild(backdrop);
+                            document.body.removeChild(modal);
+                        };
+
+                        if (shouldPrompt) {
+                            const [question, expected] = message.split('|');
+                            if (!expected) {
+                                console.warn('Livewire: Must provide an expectation with wire:confirm.prompt');
+                                return;
+                            }
+
+                            const modalContent = `
+                    <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md">
+                        <p class="text-gray-700 text-lg font-medium mb-4">${question}</p>
+                        <input
+                            type="text"
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                            placeholder="Enter your response"
+                            id="userInput"
+                        />
+                        <p id="errorMessage" class="text-red-500 text-sm hidden">Invalid input. Please try again.</p>
+                        <div class="flex justify-end gap-2 mt-4">
+                            <button
+                                class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none"
+                                id="confirmButton">
+                                Confirm
+                            </button>
+                            <button
+                                class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 focus:outline-none"
+                                id="cancelButton">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>`;
+
+                            const {
+                                modal
+                                , backdrop
+                            } = createModal(modalContent);
+
+                            modal.querySelector('#confirmButton').addEventListener('click', () => {
+                                const userInput = modal.querySelector('#userInput').value.trim();
+                                const errorMessage = modal.querySelector('#errorMessage');
+                                if (userInput === expected) {
+                                    action();
+                                    removeModal(backdrop, modal);
+                                } else {
+                                    errorMessage.classList.remove('hidden');
+                                }
+                            });
+
+                            modal.querySelector('#cancelButton').addEventListener('click', () => {
+                                instead();
+                                removeModal(backdrop, modal);
+                            });
+                        } else {
+                            const modalContent = `
+                    <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md">
+                        <p class="text-gray-700 text-lg font-medium mb-4">${message}</p>
+                        <div class="flex justify-end gap-2">
+                            <button
+                                class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none"
+                                id="confirmButton">
+                                Confirm
+                            </button>
+                            <button
+                                class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 focus:outline-none"
+                                id="cancelButton">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>`;
+
+                            const {
+                                modal
+                                , backdrop
+                            } = createModal(modalContent);
+
+                            modal.querySelector('#confirmButton').addEventListener('click', () => {
+                                action();
+                                removeModal(backdrop, modal);
+                            });
+
+                            modal.querySelector('#cancelButton').addEventListener('click', () => {
+                                instead();
+                                removeModal(backdrop, modal);
+                            });
+                        }
+                    };
+                });
+            });
+        </script>
+    @endpush
 </div>

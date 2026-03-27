@@ -28,4 +28,6 @@
 </script>
 
 <script src="https://www.jsdelivr.com/package/npm/pdfjs-dist"></script>
+
+
 @stack('scripts')

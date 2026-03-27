@@ -129,6 +129,7 @@ class PermohonanIzin extends Component
                 $dataCurrent->status = 'success';
                 $dataCurrent->save();
 
+
                 // aktifkan next approver kalau ada
                 if (isset($izinApprovalWorkflow[$currentIndex + 1])) {
                     $dataNextIndex = $izinApprovalWorkflow[$currentIndex + 1];
@@ -141,6 +142,10 @@ class PermohonanIzin extends Component
                 if ($currentIndex === $lastIndex) {
                     $izin = Izin::find($id);
                     $izin->status = 'success';
+                    $izin->save();
+                }else{
+                    $izin = Izin::find($id);
+                    $izin->status = 'process';
                     $izin->save();
                 }
             });

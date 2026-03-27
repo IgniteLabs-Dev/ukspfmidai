@@ -124,6 +124,8 @@ class PermohonanCuti extends Component
                 $dataCurrent->status = 'success';
                 $dataCurrent->save();
 
+
+
                 // aktifkan next approver kalau ada
                 if (isset($cutiApprovalWorkflow[$currentIndex + 1])) {
                     $dataNextIndex = $cutiApprovalWorkflow[$currentIndex + 1];
@@ -136,6 +138,10 @@ class PermohonanCuti extends Component
                 if ($currentIndex === $lastIndex) {
                     $cuti = Cuti::find($id);
                     $cuti->status = 'success';
+                    $cuti->save();
+                }else{
+                    $cuti = Cuti::find($id);
+                    $cuti->status = 'process';
                     $cuti->save();
                 }
             });

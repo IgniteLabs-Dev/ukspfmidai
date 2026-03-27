@@ -20,7 +20,6 @@ class Dashboard extends Component
         $CutiPending = Cuti::where('status', 'pending')->where('user_id', $user['id'])->count();
         $CutiSuccess = Cuti::where('status', 'success')->where('user_id', $user['id'])->count();
         $CutiFailed = Cuti::where('status', 'failed')->where('user_id', $user['id'])->count();
-        $CutiKetua = Cuti::where('status', 'menunggu_ketua')->where('user_id', $user['id'])->count();
 
         $IzinPending = Izin::where('status', 'pending')->where('user_id', $user['id'])->count();
         $IzinSuccess = Izin::where('status', 'success')->where('user_id', $user['id'])->count();
@@ -39,6 +38,6 @@ class Dashboard extends Component
 
 
 
-        return view('livewire.dashboard', compact( 'CutiPending', 'CutiSuccess', 'CutiFailed', 'CutiKetua', 'IzinPending', 'IzinSuccess', 'IzinFailed', 'permohonanIzinWaiting', 'permohonanIzinSuccess', 'permohonanIzinFailed', 'permohonanCutiWaiting', 'permohonanCutiSuccess', 'permohonanCutiFailed','cutiIzinApprover'))->extends('layouts.master');
+        return view('livewire.dashboard', compact( 'CutiPending', 'CutiSuccess', 'CutiFailed', 'IzinPending', 'IzinSuccess', 'IzinFailed', 'permohonanIzinWaiting', 'permohonanIzinSuccess', 'permohonanIzinFailed', 'permohonanCutiWaiting', 'permohonanCutiSuccess', 'permohonanCutiFailed','cutiIzinApprover'))->extends('layouts.master');
     }
 }

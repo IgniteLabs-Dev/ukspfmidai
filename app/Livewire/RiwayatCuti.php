@@ -6,6 +6,7 @@ use App\Models\Cuti;
 use App\Models\CutiApprovalWorkflow;
 use App\Models\CutiType;
 use App\Models\CutiUser;
+use App\Models\IzinApprovalWorkflow;
 use App\Models\Tahun;
 use App\Models\User;
 use App\Models\ViewCutiKuota;
@@ -30,7 +31,8 @@ class RiwayatCuti extends Component
     public $status;
     public $alasan;
     public $filter;
-
+    public $viewFlowId;
+    public $flowData;
     public $editId;
     public $form = [
         'alasan' => '',
@@ -89,6 +91,7 @@ class RiwayatCuti extends Component
             })
             ->orderBy('id', 'desc')
             ->paginate(10);
+
 
         return view('livewire.riwayat-cuti', compact('data', 'tahunData', 'cutiTypesData','cutiTypes'))->extends('layouts.master');
     }
@@ -230,5 +233,17 @@ class RiwayatCuti extends Component
             'tanggal_mulai' => '',
             'tanggal_selesai' => '',
         ];
+    }
+
+    public function viewFlow($id)
+    {
+        $this->viewFlowId = $id;
+
+        $flowData = IzinApprovalWorkflow::with('approvalLevel')
+            ->where('izin_id', $id)
+            ->orderBy('id')
+            ->get();
+
+        $this->flowData = $flowData;
     }
 }

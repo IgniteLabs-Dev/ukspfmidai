@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Izin;
+use App\Models\IzinApprovalWorkflow;
 use App\Models\IzinType;
 use App\Models\Tahun;
 use App\Models\User;
@@ -24,6 +25,8 @@ class RiwayatIzin extends Component
     public $bulan;
     public $status;
     public $filter;
+    public $viewFlowId;
+    public $flowData;
     public $editId;
     public $editDoc = false;
     public $form =
@@ -104,7 +107,17 @@ class RiwayatIzin extends Component
     {
         $this->resetPage();
     }
+    public function viewFlow($id)
+    {
+        $this->viewFlowId = $id;
 
+        $flowData = IzinApprovalWorkflow::with('approvalLevel')
+            ->where('izin_id', $id)
+            ->orderBy('id')
+            ->get();
+
+        $this->flowData = $flowData;
+    }
     public function destroy($id)
     {
         $izin = Izin::findOrFail($id);
