@@ -152,6 +152,9 @@
                 <div>
                     <x-input label="Nomor WA" for="nomor_wa" wire="nomor_wa" type="text"
                         placeholder="Nomor WA" />
+                </div>           <div>
+                    <x-input label="Email" for="email" wire="email" type="email"
+                        placeholder="Email" />
                 </div>
 
                 <div>

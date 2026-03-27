@@ -21,7 +21,7 @@ class ManajemenUser extends Component
     public $editId = null;
     public $deleteId = null;
     public $filter = null;
-    public $name, $nip, $password, $role, $jabatan_id, $pangkat_id, $nomor_wa;
+    public $name, $nip, $password, $role, $jabatan_id, $pangkat_id, $nomor_wa,$email;
 
 
     public function render()
@@ -34,6 +34,7 @@ class ManajemenUser extends Component
                 $subquery->where('name', 'like', '%' . $this->filter . '%')
                     ->orWhere('nip', 'like', '%' . $this->filter . '%')
                     ->orWhere('nomor_wa', 'like', '%' . $this->filter . '%')
+                    ->orWhere('email', 'like', '%' . $this->filter . '%')
                     ->orwherehas('jabatan', function ($jabatan) {
                         $jabatan->where('name', 'like', '%' . $this->filter . '%');
                     })
@@ -65,7 +66,7 @@ class ManajemenUser extends Component
         $this->mode = 'view';
         $this->resetValidation();
         $this->editId = null;
-        $this->reset(['name', 'nip', 'password', 'role', 'jabatan_id', 'pangkat_id', 'nomor_wa']);
+        $this->reset(['name', 'nip', 'password', 'role', 'jabatan_id', 'pangkat_id', 'nomor_wa','email']);
     }
     public function create(CrudService $crud)
     {
@@ -77,6 +78,7 @@ class ManajemenUser extends Component
             'jabatan_id' => 'required|integer',
             'pangkat_id' => 'required|integer',
             'nomor_wa' => 'required|string|max:15',
+            'email' => 'nullable|email',
         ]);
 
         $data = [
@@ -87,6 +89,7 @@ class ManajemenUser extends Component
             'jabatan_id' => $this->jabatan_id,
             'pangkat_id' => $this->pangkat_id,
             'nomor_wa' => $this->nomor_wa,
+            'email' => $this->email,
         ];
 
         $crud->create(User::class, $data, 'User berhasil dibuat!', 'Gagal membuat user.');
@@ -103,6 +106,7 @@ class ManajemenUser extends Component
             $this->jabatan_id = $user->jabatan_id;
             $this->pangkat_id = $user->pangkat_id;
             $this->nomor_wa = $user->nomor_wa;
+            $this->email = $user->email;
             $this->mode = 'edit';
             $this->editId = $id;
         }
@@ -116,6 +120,7 @@ class ManajemenUser extends Component
             'jabatan_id' => 'required|integer|max:100',
             'pangkat_id' => 'required|integer|max:100',
             'nomor_wa' => 'nullable|string|max:15',
+            'email' => 'nullable|email',
         ]);
 
         $data = [
@@ -125,6 +130,7 @@ class ManajemenUser extends Component
             'jabatan_id' => $this->jabatan_id,
             'pangkat_id' => $this->pangkat_id,
             'nomor_wa' => $this->nomor_wa,
+            'email' => $this->email,
 
         ];
         if (!empty($this->password)) {
