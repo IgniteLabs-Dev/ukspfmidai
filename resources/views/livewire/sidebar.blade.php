@@ -107,7 +107,7 @@
                         </a>
                     </li>
                 @endif
-                @if ($user->role == 'SUPERADMIN')
+                @if ($user->role == 'SUPERADMIN' || $user->role == 'ADMIN')
                     <li class="px-2 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
                         Admin
                     </li>

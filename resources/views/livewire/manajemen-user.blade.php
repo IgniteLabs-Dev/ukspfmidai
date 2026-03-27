@@ -57,26 +57,28 @@
                                         </a>
                                     </td>
                                     <td class="text-center justify-center">
-                                        @if ($deleteId != $item->id)
-                                            <div class="flex flex-row gap-1 justify-center">
-                                                <x-button wire:click="edit({{ $item->id }})" bg="[var(--warning)]"
-                                                    px="1.5" py="1.5"
-                                                    label='<i class="fa-solid fa-pen"></i>' />
-                                                <x-button wire:click="$set('deleteId', {{ $item->id }})"
-                                                    bg="[var(--danger)]" px="1.5" py="1.5"
-                                                    label='<i class="fa-solid fa-trash"></i>' />
-                                            </div>
-                                        @else
-                                            <p class="text-center">Apa anda yakin?</p>
-                                            <div class="flex flex-row gap-1 justify-center mb-1">
-                                                <x-button wire:click="$set('deleteId', null)" bg="[var(--success)]"
-                                                    px="1.5" py="1.5"
-                                                    label='<i class="fa-solid fa-x"></i>' />
-                                                <x-button wire:click="delete({{ $item->id }})" bg="[var(--danger)]"
-                                                    px="1.5" py="1.5"
-                                                    label='<i class="fa-solid fa-check"></i>' />
+                                        @if($userId != $item->id &&(auth()->user()->role == 'SUPERADMIN' ||$item->role != 'SUPERADMIN'))
+                                            @if ($deleteId != $item->id)
+                                                <div class="flex flex-row gap-1 justify-center">
+                                                    <x-button wire:click="edit({{ $item->id }})" bg="[var(--warning)]"
+                                                        px="1.5" py="1.5"
+                                                        label='<i class="fa-solid fa-pen"></i>' />
+                                                    <x-button wire:click="$set('deleteId', {{ $item->id }})"
+                                                        bg="[var(--danger)]" px="1.5" py="1.5"
+                                                        label='<i class="fa-solid fa-trash"></i>' />
+                                                </div>
+                                            @else
+                                                <p class="text-center">Apa anda yakin?</p>
+                                                <div class="flex flex-row gap-1 justify-center mb-1">
+                                                    <x-button wire:click="$set('deleteId', null)" bg="[var(--success)]"
+                                                        px="1.5" py="1.5"
+                                                        label='<i class="fa-solid fa-x"></i>' />
+                                                    <x-button wire:click="delete({{ $item->id }})" bg="[var(--danger)]"
+                                                        px="1.5" py="1.5"
+                                                        label='<i class="fa-solid fa-check"></i>' />
 
-                                            </div>
+                                                </div>
+                                            @endif
                                         @endif
                                     </td>
                                 </tr>
@@ -115,13 +117,27 @@
                         :required="true" />
                 </div>
 
+                @php
+                    $options = [
+                        'USER' => 'User',
+                        'ADMIN' => 'Admin',
+                    ];
+
+                    if (auth()->user()->role == 'SUPERADMIN') {
+                        $options['SUPERADMIN'] = 'Superadmin';
+                    }
+                @endphp
+
                 <div>
-                    <x-select label="Role" for="role" wire="role" wireType="change" placeholder="Semua role"
-                        :options="[
-                            'USER' => 'User',
-                            'ADMIN' => 'Admin',
-                            'SUPERADMIN' => 'Superadmin',
-                        ]" :required="true" />
+                    <x-select
+                        label="Role"
+                        for="role"
+                        wire="role"
+                        wireType="change"
+                        placeholder="Semua role"
+                        :options="$options"
+                        :required="true"
+                    />
                 </div>
 
                 <div>

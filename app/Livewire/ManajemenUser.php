@@ -10,6 +10,7 @@ use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithPagination;
 
+use Tymon\JWTAuth\Facades\JWTAuth;
 use function Psy\debug;
 
 class ManajemenUser extends Component
@@ -25,6 +26,9 @@ class ManajemenUser extends Component
 
     public function render()
     {
+        $user = JWTAuth::parseToken()->authenticate();
+        $userId = $user->id;
+        $userRole = $user->role;
         $data = User::when(!empty($this->filter), function ($query) {
             $query->where(function ($subquery) {
                 $subquery->where('name', 'like', '%' . $this->filter . '%')
@@ -50,7 +54,7 @@ class ManajemenUser extends Component
             ->toArray();
 
 
-        return view('livewire.manajemen-user', compact('data', 'jabatanData', 'pangkatData'))->extends('layouts.master');
+        return view('livewire.manajemen-user', compact('data', 'jabatanData', 'pangkatData','userId','userRole'))->extends('layouts.master');
     }
     public function toggleMode()
     {
