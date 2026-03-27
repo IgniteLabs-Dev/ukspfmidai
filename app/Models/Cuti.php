@@ -18,6 +18,7 @@ class Cuti extends Model
         'tanggal_start',
         'tanggal_end',
         'doc',
+        'alasan_ditolak'
     ];
 
     public function cutiType()

@@ -114,15 +114,15 @@
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-900   ">
                             <div class="flex justify-center gap-1">
-
                                 @if ($item->status === 'waiting')
-                                    <x-button wire:click="reject({{ $item->cuti->id }})" bg="[var(--danger)]" px="1"
-                                        py="1"  wire:confirm="Apakah anda yakin?" label='<i class="fa-solid fa-circle-xmark"></i>' />
-                                    <x-button wire:confirm="Apakah anda yakin?" wire:click="approve({{ $item->cuti->id }})" bg="[var(--success)]"
-                                        px="1" py="1" label='<i class="fa-solid fa-circle-check"></i>' />
+                                    <input type="hidden" wire:model="alasanDitolak" id="alasanDitolakField" />
+                                    <x-button wire:anow-confirm.reject="Apakah anda yakin ingin menolak?" wire:click="reject({{ $item->cuti->id }})" bg="[var(--danger)]" px="1"
+                                              py="1" label='<i class="fa-solid fa-circle-xmark"></i>' />
+                                    <x-button wire:anow-confirm="Apakah anda yakin?" wire:click="approve({{ $item->cuti->id }})" bg="[var(--success)]"
+                                              px="1" py="1" label='<i class="fa-solid fa-circle-check"></i>' />
                                 @else
-                                    <x-button wire:confirm="Apakah anda yakin?" wire:click="backToWaiting({{ $item->cuti->id }})" bg="[var(--warning)]"
-                                        px="1" py="1" label='<i class="fa-solid fa-clock"></i>' />
+                                    <x-button wire:anow-confirm="Apakah anda yakin?" wire:click="backToWaiting({{ $item->cuti->id }})" bg="[var(--warning)]"
+                                              px="1" py="1" label='<i class="fa-solid fa-clock"></i>' />
                                 @endif
                             </div>
                          </td>
@@ -276,7 +276,6 @@
             </div>
         </div>
     </div>
-    <button wire:anow-confirm.prompt="Are you sure?\n\nType DELETE to confirm|DELETE" wire:click="testFunction">Click here</button>
 
 
     @push('scripts')
@@ -287,12 +286,12 @@
                                                         , directive
                                                     }) => {
                     let message = directive.expression.replaceAll('\\n', '\n') || "{{ __('Are you sure?') }}";
-                    let shouldPrompt = directive.modifiers.includes('prompt');
+                    let isReject = directive.modifiers.includes('reject');
 
                     el.__livewire_confirm = (action, instead) => {
                         const createModal = (content) => {
                             const backdrop = document.createElement('div');
-                            backdrop.className = 'fixed inset-0 bg-black bg-opacity-50 z-40';
+                            backdrop.className = 'fixed inset-0 bg-black/20 z-40';
 
                             const modal = document.createElement('div');
                             modal.className = 'fixed inset-0 flex items-center justify-center z-50';
@@ -300,101 +299,143 @@
 
                             document.body.appendChild(backdrop);
                             document.body.appendChild(modal);
-                            return {
-                                modal
-                                , backdrop
-                            };
+                            return { modal, backdrop };
                         };
 
                         const removeModal = (backdrop, modal) => {
-                            document.body.removeChild(backdrop);
-                            document.body.removeChild(modal);
+                            backdrop.style.opacity = '0';
+                            modal.style.opacity = '0';
+                            modal.style.transform = 'scale(0.95)';
+                            setTimeout(() => {
+                                document.body.removeChild(backdrop);
+                                document.body.removeChild(modal);
+                            }, 150);
                         };
 
-                        if (shouldPrompt) {
-                            const [question, expected] = message.split('|');
-                            if (!expected) {
-                                console.warn('Livewire: Must provide an expectation with wire:confirm.prompt');
-                                return;
-                            }
+                        const btnBg = el.style.backgroundColor || getComputedStyle(el).backgroundColor || '#3b82f6';
 
-                            const modalContent = `
-                    <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md">
-                        <p class="text-gray-700 text-lg font-medium mb-4">${question}</p>
-                        <input
-                            type="text"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                            placeholder="Enter your response"
-                            id="userInput"
-                        />
-                        <p id="errorMessage" class="text-red-500 text-sm hidden">Invalid input. Please try again.</p>
-                        <div class="flex justify-end gap-2 mt-4">
-                            <button
-                                class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none"
-                                id="confirmButton">
-                                Confirm
-                            </button>
-                            <button
-                                class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 focus:outline-none"
-                                id="cancelButton">
-                                Cancel
-                            </button>
+                        const rejectExtra = isReject ? `
+                        <div style="margin-bottom:1.25rem;">
+                            <label style="display:block; font-size:0.875rem; font-weight:500; color:#374151; margin-bottom:0.375rem;">
+                                Alasan ditolak <span style="color:${btnBg}">*</span>
+                            </label>
+                            <textarea id="alasanInput" rows="3" placeholder="Masukkan alasan penolakan..." style="
+                                width: 100%;
+                                border-radius: 0.5rem;
+                                border: 1px solid #e5e7eb;
+                                padding: 0.5rem 0.75rem;
+                                font-size: 0.875rem;
+                                color: #111827;
+                                background: #f3f4f6;
+                                resize: none;
+                                outline: none;
+                                box-sizing: border-box;
+                                transition: border 0.15s;
+                            " onfocus="this.style.borderColor='${btnBg}'" onblur="this.style.borderColor='#e5e7eb'"></textarea>
+                            <p id="alasanError" style="display:none; margin:0.25rem 0 0; font-size:0.75rem; color:${btnBg};">
+                                Alasan wajib diisi.
+                            </p>
                         </div>
-                    </div>`;
+                    ` : '';
 
-                            const {
-                                modal
-                                , backdrop
-                            } = createModal(modalContent);
+                        const modalContent = `
+                        <div style="
+                            background: white;
+                            border-radius: 1rem;
+                            box-shadow: 0 20px 60px rgba(0,0,0,0.15), 0 4px 16px rgba(0,0,0,0.08);
+                            padding: 1.75rem;
+                            width: 100%;
+                            max-width: 420px;
+                            transition: all 0.15s ease;
+                        ">
+                            <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1.25rem;">
+                                <div style="
+                                    width: 40px; height: 40px;
+                                    border-radius: 20%;
+                                    background: #eaeaea;
+                                    display: flex; align-items: center; justify-content: center;
+                                    flex-shrink: 0;
+                                ">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="${btnBg}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                                        <line x1="12" y1="9" x2="12" y2="13"/>
+                                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p style="margin:0; font-size:1rem; font-weight:600; color:#111827;">Konfirmasi</p>
+                                    <p style="margin:0; font-size:0.875rem; color:#6b7280;">${message}</p>
+                                </div>
+                            </div>
+                            ${rejectExtra}
+                            <div style="display:flex; justify-content:center; gap:0.5rem;">
+                                <button id="cancelButton" style="
+                                    padding: 0.5rem 1.25rem;
+                                    border-radius: 0.5rem;
+                                    border: 1px solid #e5e7eb;
+                                    background: #e5e7eb;
+                                    color: #374151;
+                                    font-size: 0.875rem;
+                                    font-weight: 500;
+                                    cursor: pointer;
+                                    transition: background 0.15s;
+                                " onmouseover="this.style.background='#d1d5db'" onmouseout="this.style.background='#e5e7eb'">
+                                    Batal
+                                </button>
+                                <button id="confirmButton" style="
+                                    padding: 0.5rem 1.25rem;
+                                    border-radius: 0.5rem;
+                                    border: none;
+                                    background: ${btnBg};
+                                    color: white;
+                                    font-size: 0.875rem;
+                                    font-weight: 500;
+                                    cursor: pointer;
+                                    transition: opacity 0.15s;
+                                " onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                                    Ya, Lanjutkan
+                                </button>
+                            </div>
+                        </div>`;
 
-                            modal.querySelector('#confirmButton').addEventListener('click', () => {
-                                const userInput = modal.querySelector('#userInput').value.trim();
-                                const errorMessage = modal.querySelector('#errorMessage');
-                                if (userInput === expected) {
-                                    action();
-                                    removeModal(backdrop, modal);
-                                } else {
-                                    errorMessage.classList.remove('hidden');
+                        const { modal, backdrop } = createModal(modalContent);
+
+                        const box = modal.querySelector('div');
+                        box.style.opacity = '0';
+                        box.style.transform = 'scale(0.95)';
+                        requestAnimationFrame(() => {
+                            box.style.transition = 'all 0.15s ease';
+                            box.style.opacity = '1';
+                            box.style.transform = 'scale(1)';
+                        });
+
+                        modal.querySelector('#confirmButton').addEventListener('click', () => {
+                            if (isReject) {
+                                const alasan = modal.querySelector('#alasanInput').value.trim();
+                                const errorEl = modal.querySelector('#alasanError');
+                                if (!alasan) {
+                                    errorEl.style.display = 'block';
+                                    modal.querySelector('#alasanInput').style.borderColor = btnBg;
+                                    return;
                                 }
-                            });
+                                // Set ke hidden input lalu trigger sync ke Livewire
+                                const field = document.getElementById('alasanDitolakField');
+                                field.value = alasan;
+                                field.dispatchEvent(new Event('input'));
+                            }
+                            action();
+                            removeModal(backdrop, modal);
+                        });
 
-                            modal.querySelector('#cancelButton').addEventListener('click', () => {
-                                instead();
-                                removeModal(backdrop, modal);
-                            });
-                        } else {
-                            const modalContent = `
-                    <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md">
-                        <p class="text-gray-700 text-lg font-medium mb-4">${message}</p>
-                        <div class="flex justify-end gap-2">
-                            <button
-                                class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none"
-                                id="confirmButton">
-                                Confirm
-                            </button>
-                            <button
-                                class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 focus:outline-none"
-                                id="cancelButton">
-                                Cancel
-                            </button>
-                        </div>
-                    </div>`;
+                        modal.querySelector('#cancelButton').addEventListener('click', () => {
+                            instead();
+                            removeModal(backdrop, modal);
+                        });
 
-                            const {
-                                modal
-                                , backdrop
-                            } = createModal(modalContent);
-
-                            modal.querySelector('#confirmButton').addEventListener('click', () => {
-                                action();
-                                removeModal(backdrop, modal);
-                            });
-
-                            modal.querySelector('#cancelButton').addEventListener('click', () => {
-                                instead();
-                                removeModal(backdrop, modal);
-                            });
-                        }
+                        backdrop.addEventListener('click', () => {
+                            instead();
+                            removeModal(backdrop, modal);
+                        });
                     };
                 });
             });

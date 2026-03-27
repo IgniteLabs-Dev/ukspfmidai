@@ -22,6 +22,7 @@ class PermohonanCuti extends Component
     public $filter;
     public $viewFlowId;
     public $flowData;
+    public string $alasanDitolak = '';
 
     public function mount()
     {
@@ -184,6 +185,7 @@ class PermohonanCuti extends Component
 
                 $cuti = Cuti::find($id);
                 $cuti->status = 'failed';
+                $cuti->alasan_ditolak = $this->alasanDitolak;
                 $cuti->save();
             });
 
@@ -221,6 +223,10 @@ class PermohonanCuti extends Component
                 $dataCurrent = $cutiApprovalWorkflow[$currentIndex];
                 $dataCurrent->status = 'waiting';
                 $dataCurrent->save();
+
+                $resetCuti = Cuti::find($id);
+                $resetCuti->alasan_ditolak = null;
+                $resetCuti->save();
 
                 // aktifkan next approver kalau ada
                 for ($i = $currentIndex + 1; $i < count($cutiApprovalWorkflow); $i++) {

@@ -107,8 +107,7 @@
                                     class="bg-[var(--info)] text-white px-1 py-1 rounded-md cursor-pointer hover:scale-105">
                                 <i class="fa-solid fa-pen"></i>
                             </button>
-                            <button wire:click="destroy({{ $item->id }})"
-                                    wire:confirm="Apakah anda yakin ingin menghapus data ini?"
+                            <button wire:click="destroy({{ $item->id }})" wire:anow-confirm="Apakah anda yakin ingin menghapus data ini?"
                                     class="bg-[var(--danger)] text-white px-1 py-1 rounded-md cursor-pointer hover:scale-105">
                                 <i class="fa-solid fa-x"></i>
                             </button>
@@ -362,4 +361,129 @@
             </div>
         </div>
     </div>
+
+    @push('scripts')
+        <script>
+            document.addEventListener('livewire:init', () => {
+                Livewire.directive('anow-confirm', ({
+                                                        el
+                                                        , directive
+                                                    }) => {
+                    let message = directive.expression.replaceAll('\\n', '\n') || "{{ __('Are you sure?') }}";
+
+                    el.__livewire_confirm = (action, instead) => {
+                        const createModal = (content) => {
+                            const backdrop = document.createElement('div');
+                            backdrop.className = 'fixed inset-0 bg-black/20 z-40';
+
+                            const modal = document.createElement('div');
+                            modal.className = 'fixed inset-0 flex items-center justify-center z-50';
+                            modal.innerHTML = content;
+
+                            document.body.appendChild(backdrop);
+                            document.body.appendChild(modal);
+                            return { modal, backdrop };
+                        };
+
+                        const removeModal = (backdrop, modal) => {
+                            backdrop.style.opacity = '0';
+                            modal.style.opacity = '0';
+                            modal.style.transform = 'scale(0.95)';
+                            setTimeout(() => {
+                                document.body.removeChild(backdrop);
+                                document.body.removeChild(modal);
+                            }, 150);
+                        };
+
+                        const btnBg = el.style.backgroundColor || getComputedStyle(el).backgroundColor || '#3b82f6';
+
+                        const modalContent = `
+                        <div style="
+                            background: #f3f4f6;
+                            border-radius: 1rem;
+                            box-shadow: 0 20px 60px rgba(0,0,0,0.15), 0 4px 16px rgba(0,0,0,0.08);
+                            padding: 1.75rem;
+                            width: 100%;
+                            max-width: 420px;
+                            transition: all 0.15s ease;
+                        ">
+                            <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1.25rem;">
+                                <div style="
+                                    width: 40px; height: 40px;
+                                    border-radius: 20%;
+                                    background: #eaeaea;
+                                    display: flex; align-items: center; justify-content: center;
+                                    flex-shrink: 0;
+                                ">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="${btnBg}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                                        <line x1="12" y1="9" x2="12" y2="13"/>
+                                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p style="margin:0; font-size:1rem; font-weight:600; color:#111827;">Konfirmasi</p>
+                                    <p style="margin:0; font-size:0.875rem; color:#6b7280;">${message}</p>
+                                </div>
+                            </div>
+                            <div style="display:flex; justify-content:center; gap:0.5rem;">
+                                <button id="cancelButton" style="
+                                    padding: 0.5rem 1.25rem;
+                                    border-radius: 0.5rem;
+                                    border: 1px solid #e5e7eb;
+                                    background: #e5e7eb;
+                                    color: #374151;
+                                    font-size: 0.875rem;
+                                    font-weight: 500;
+                                    cursor: pointer;
+                                    transition: background 0.15s;
+                                " onmouseover="this.style.background='#d1d5db'" onmouseout="this.style.background='#e5e7eb'">
+                                    Batal
+                                </button>
+                                <button id="confirmButton" style="
+                                    padding: 0.5rem 1.25rem;
+                                    border-radius: 0.5rem;
+                                    border: none;
+                                    background: ${btnBg};
+                                    color: white;
+                                    font-size: 0.875rem;
+                                    font-weight: 500;
+                                    cursor: pointer;
+                                    transition: opacity 0.15s;
+                                " onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                                    Ya, lanjutkan
+                                </button>
+                            </div>
+                        </div>`;
+
+                        const { modal, backdrop } = createModal(modalContent);
+
+                        const box = modal.querySelector('div');
+                        box.style.opacity = '0';
+                        box.style.transform = 'scale(0.95)';
+                        requestAnimationFrame(() => {
+                            box.style.transition = 'all 0.15s ease';
+                            box.style.opacity = '1';
+                            box.style.transform = 'scale(1)';
+                        });
+
+                        modal.querySelector('#confirmButton').addEventListener('click', () => {
+                            action();
+                            removeModal(backdrop, modal);
+                        });
+
+                        modal.querySelector('#cancelButton').addEventListener('click', () => {
+                            instead();
+                            removeModal(backdrop, modal);
+                        });
+
+                        backdrop.addEventListener('click', () => {
+                            instead();
+                            removeModal(backdrop, modal);
+                        });
+                    };
+                });
+            });
+        </script>
+    @endpush
 </div>

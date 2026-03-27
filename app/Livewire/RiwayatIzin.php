@@ -37,6 +37,7 @@ class RiwayatIzin extends Component
         'tanggal_selesai' => '',
         'doc' => '',
     ];
+    public $alasanDitolak = null;
     public function mount()
     {
         $this->status = request()->query('status');
@@ -117,6 +118,12 @@ class RiwayatIzin extends Component
             ->get();
 
         $this->flowData = $flowData;
+    }
+
+    public function viewAlasanDitolak($id)
+    {
+        $izin = Izin::find($id);
+        $this->alasanDitolak = $izin->alasan_ditolak;
     }
     public function destroy($id)
     {

@@ -18,6 +18,7 @@ class Izin extends Model
         'keperluan',
         'status',
         'doc',
+        'alasan_ditolak'
     ];
 
     public function izinType()

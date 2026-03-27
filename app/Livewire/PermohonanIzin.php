@@ -23,6 +23,7 @@ class PermohonanIzin extends Component
     public $filter;
     public $viewFlowId;
     public $flowData;
+    public string $alasanDitolak = '';
 
     public function mount()
     {
@@ -168,19 +169,16 @@ class PermohonanIzin extends Component
     {
         $user = JWTAuth::parseToken()->authenticate();
 
-        // eager load approvalLevel & pastikan urutan
         $izinApprovalWorkflow = IzinApprovalWorkflow::with('approvalLevel')
             ->where('izin_id', $id)
             ->orderBy('id')
             ->get();
 
-        // cari index yang sesuai jabatan user dan status waiting
         $currentIndex = $izinApprovalWorkflow->search(function ($item) use ($user) {
             return $item->approvalLevel->jabatan_id == $user->jabatan_id && $item->status == 'waiting';
         });
 
         if ($currentIndex !== false) {
-            //ubah status di IzinApprovalWorkflow
             DB::transaction(function () use ($izinApprovalWorkflow, $currentIndex, $id) {
                 $dataCurrent = $izinApprovalWorkflow[$currentIndex];
                 $dataCurrent->status = 'failed';
@@ -188,8 +186,11 @@ class PermohonanIzin extends Component
 
                 $izin = Izin::find($id);
                 $izin->status = 'failed';
+                $izin->alasan_ditolak = $this->alasanDitolak;
                 $izin->save();
             });
+
+            $this->alasanDitolak = ''; // reset
 
             LivewireAlert::title('Reject Izin Berhasil!')
                 ->position('top-end')
@@ -225,6 +226,10 @@ class PermohonanIzin extends Component
                 $dataCurrent = $izinApprovalWorkflow[$currentIndex];
                 $dataCurrent->status = 'waiting';
                 $dataCurrent->save();
+
+                $resetIzin = Izin::find($id);
+                $resetIzin->alasan_ditolak = null;
+                $resetIzin->save();
 
                 // aktifkan next approver kalau ada
                 if (isset($izinApprovalWorkflow[$currentIndex + 1])) {
