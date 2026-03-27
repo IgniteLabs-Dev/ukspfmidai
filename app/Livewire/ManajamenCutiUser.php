@@ -66,7 +66,7 @@ class ManajamenCutiUser extends Component
 
             ->groupBy('cuti_type_id', 'nama_cuti', 'tahun', 'bulan')
             ->orderBy('tahun')
-            ->paginate(25);
+            ->paginate(10);
 
 
         $tahunData = Cuti::where('user_id', $this->user->id)
@@ -80,5 +80,17 @@ class ManajamenCutiUser extends Component
 
         return view('livewire.manajamen-cuti-user', compact( 'data', 'tahunData', 'cutiTypes'));
     }
+    public function updatedBulan()
+    {
+        $this->resetPage();
+    }
+        public function updatedCutiTypeFilter()
+        {
+            $this->resetPage();
+        }
+        public function updatedTahun()
+        {
+            $this->resetPage();
+        }
 
 }

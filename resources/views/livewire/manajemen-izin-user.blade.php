@@ -58,11 +58,10 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    @php $no = 1; @endphp
 
                                     @forelse($data as $item)
                                         <tr class="bg-white border-b border-gray-200">
-                                            <td class="px-6 py-3">{{ $no++ }}</td>
+                                            <td class="px-6 py-3">{{ $data->firstItem() + $loop->index }}</td>
                                             <td class="px-6 py-3 text-center">{{ $item->tahun }}</td>
                                             <td class="px-6 py-3 text-center">
                                                 {{ $item->nama_izin }}
@@ -82,7 +81,9 @@
                                 </table>
                             </div>
                         </div>
-
+                        <div class="mt-3">
+                            {{ $data->links() }}
+                        </div>
                     </div>
                 </div>
 

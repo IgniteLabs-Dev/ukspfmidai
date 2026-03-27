@@ -64,7 +64,7 @@ class ManajemenIzinUser extends Component
 
             ->groupBy('izin_type_id', 'nama_izin', 'tahun', 'bulan')
             ->orderBy('tahun')
-            ->paginate(25);
+            ->paginate(10);
 
 
 
@@ -78,5 +78,18 @@ class ManajemenIzinUser extends Component
         $izinTypes = IzinType::pluck('name', 'id');
 
         return view('livewire.manajemen-izin-user', compact( 'data', 'tahunData', 'izinTypes'));
+    }
+
+    public function updatedBulan()
+    {
+        $this->resetPage();
+    }
+    public function updatedIzinTypeFilter()
+    {
+        $this->resetPage();
+    }
+    public function updatedTahun()
+    {
+        $this->resetPage();
     }
 }
