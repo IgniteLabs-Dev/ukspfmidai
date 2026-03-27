@@ -6,6 +6,7 @@ use App\Models\Cuti;
 use App\Models\CutiApprovalWorkflow;
 use App\Models\CutiType;
 use App\Models\CutiUser;
+use App\Models\Izin;
 use App\Models\IzinApprovalWorkflow;
 use App\Models\Tahun;
 use App\Models\User;
@@ -34,6 +35,7 @@ class RiwayatCuti extends Component
     public $viewFlowId;
     public $flowData;
     public $editId;
+    public $alasanDitolak;
     public $form = [
         'alasan' => '',
         'cuti_type_id' => '',
@@ -245,5 +247,11 @@ class RiwayatCuti extends Component
             ->get();
 
         $this->flowData = $flowData;
+    }
+
+    public function viewAlasanDitolak($id)
+    {
+        $cuti = Cuti::find($id);
+        $this->alasanDitolak = $cuti->alasan_ditolak;
     }
 }
