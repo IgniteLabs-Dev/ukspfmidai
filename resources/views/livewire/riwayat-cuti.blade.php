@@ -91,21 +91,21 @@
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-900 flex justify-center gap-1">
                             <button @click="$dispatch('open-pdf', { url: '{{ asset('files/cuti/'. $item->doc) }}' })"
-                                    class="bg-[var(--primary)] text-white px-1 py-1 rounded-md hover:cursor-pointer hover:scale-105">
+                                    class="bg-[var(--primary)] text-white px-1 py-1 rounded-md cursor-pointer hover:scale-105">
                                 <i class="fa-solid fa-eye"></i>
                             </button>
                             <a href="{{ asset('files/cuti/'. $item->doc) }}" download
-                               class="bg-[var(--warning)] text-white px-1 py-1 rounded-md hover:cursor-pointer hover:scale-105 inline-flex items-center">
+                               class="bg-[var(--warning)] text-white px-1 py-1 rounded-md cursor-pointer hover:scale-105 inline-flex items-center">
                                 <i class="fa-solid fa-download"></i>
                             </a>
                             <button @click="$dispatch('open-edit')"
                                     wire:click="edit({{ $item->id }})"
-                                    class="bg-[var(--info)] text-white px-1 py-1 rounded-md hover:cursor-pointer hover:scale-105">
+                                    class="bg-[var(--info)] text-white px-1 py-1 rounded-md cursor-pointer hover:scale-105">
                                 <i class="fa-solid fa-pen"></i>
                             </button>
                             <button wire:click="destroy({{ $item->id }})"
                                     wire:confirm="Apakah anda yakin ingin menghapus data ini?"
-                                    class="bg-[var(--danger)] text-white px-1 py-1 rounded-md hover:cursor-pointer hover:scale-105">
+                                    class="bg-[var(--danger)] text-white px-1 py-1 rounded-md cursor-pointer hover:scale-105">
                                 <i class="fa-solid fa-x"></i>
                             </button>
                         </td>

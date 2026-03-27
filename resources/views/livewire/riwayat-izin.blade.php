@@ -68,8 +68,12 @@
                         <td class="px-6 py-4 text-sm text-gray-900">{{ $data->firstItem() + $loop->index }}</td>
                         <td class="px-6 py-4 text-sm text-gray-900">{{ $item->izinType->name }}</td>
                         <td class="px-6 py-4 text-sm text-gray-900 flex justify-center">
-                            {{ \Carbon\Carbon::parse($item->tanggal_start)->translatedFormat('d F Y, H:i') }} 🠖
-                            {{ \Carbon\Carbon::parse($item->tanggal_end)->translatedFormat('d F Y, H:i') }}
+                            @if($item->tanggal_mulai && $item->tanggal_selesai)
+                                {{ \Carbon\Carbon::parse($item->tanggal_mulai)->translatedFormat('d F Y, H:i') }} 🠖
+                                {{ \Carbon\Carbon::parse($item->tanggal_selesai)->translatedFormat('d F Y, H:i') }}
+                            @else
+                                -
+                            @endif
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-900">{{ $item->keperluan }}</td>
                         <td class="px-6 py-4 text-sm text-gray-900 text-center">
@@ -90,6 +94,7 @@
                             </span>
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-900 flex justify-center gap-1">
+
                             <button @click="$dispatch('open-pdf', { url: '{{ asset('files/izin/'. $item->doc) }}' })"
                                     class="cursor-pointer bg-[var(--primary)] text-white px-1 py-1 rounded-md  hover:scale-105">
                                 <i class="fa-solid fa-eye"></i>
@@ -98,6 +103,7 @@
                                class="cursor-pointer bg-[var(--warning)] text-white px-1 py-1 rounded-md  hover:scale-105 inline-flex items-center">
                                 <i class="fa-solid fa-download"></i>
                             </a>
+                            @if($item->status == 'pending')
                             <button @click="$dispatch('open-edit')"
                                     wire:click="edit({{ $item->id }})"
                                     class="cursor-pointer bg-[var(--info)] text-white px-1 py-1 rounded-md  hover:scale-105">
@@ -108,6 +114,7 @@
                                     class="cursor-pointer bg-[var(--danger)] text-white px-1 py-1 rounded-md  hover:scale-105">
                                 <i class="fa-solid fa-x"></i>
                             </button>
+                            @endif
                         </td>
                     </tr>
                 @empty

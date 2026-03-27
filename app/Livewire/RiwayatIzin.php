@@ -41,9 +41,18 @@ class RiwayatIzin extends Component
 
     public function render()
     {
-        $tahunData = Tahun::where('status', 'active')
+        $tahunData = Izin::where('user_id', JWTAuth::parseToken()->authenticate()->id)
+            ->selectRaw('YEAR(tanggal_mulai) as tahun')
+            ->whereNotNull('tanggal_mulai')
+            ->union(
+                Izin::where('user_id', JWTAuth::parseToken()->authenticate()->id)
+                    ->selectRaw('YEAR(tanggal_selesai) as tahun')
+                    ->whereNotNull('tanggal_selesai')
+            )
+            ->orderBy('tahun', 'asc')
             ->pluck('tahun', 'tahun')
             ->toArray();
+
         $izinTypesData = IzinType::where('status', 'active')
             ->pluck('name', 'id')
             ->toArray();
@@ -52,7 +61,8 @@ class RiwayatIzin extends Component
 
         $data = Izin::where('user_id', JWTAuth::parseToken()->authenticate()->id)
             ->when($this->tahun, function ($query) {
-                return $query->whereYear('created_at', $this->tahun);
+                return $query->whereYear('tanggal_mulai', $this->tahun)
+                    ->orWhereYear('tanggal_selesai', $this->tahun);
             })
             ->when($this->izinType, function ($query) {
                 return $query->where('izin_type_id', $this->izinType);

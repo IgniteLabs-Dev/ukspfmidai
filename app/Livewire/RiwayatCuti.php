@@ -49,11 +49,18 @@ class RiwayatCuti extends Component
     public function render()
     {
         $tahunData = Cuti::where('user_id', JWTAuth::parseToken()->authenticate()->id)
-            ->selectRaw('YEAR(created_at) as tahun')
-            ->groupBy('tahun')
-            ->orderBy('tahun', 'desc')
+            ->selectRaw('YEAR(tanggal_start) as tahun')
+            ->whereNotNull('tanggal_start')
+            ->union(
+                Cuti::where('user_id', JWTAuth::parseToken()->authenticate()->id)
+                    ->selectRaw('YEAR(tanggal_end) as tahun')
+                    ->whereNotNull('tanggal_end')
+            )
+            ->orderBy('tahun', 'asc')
             ->pluck('tahun', 'tahun')
             ->toArray();
+
+
         $cutiTypesData = CutiType::where('status', 'active')
             ->pluck('name', 'id')
             ->toArray();
@@ -62,7 +69,8 @@ class RiwayatCuti extends Component
 
         $data = Cuti::where('user_id', JWTAuth::parseToken()->authenticate()->id)
             ->when($this->tahun, function ($query) {
-                return $query->whereYear('created_at', $this->tahun);
+                return $query->whereYear('tanggal_start', $this->tahun)
+                    ->orWhereYear('tanggal_end', $this->tahun);
             })
             ->when($this->bulan, function ($query) {
                 return $query->whereMonth('tanggal_start', $this->bulan)
@@ -150,7 +158,7 @@ class RiwayatCuti extends Component
     public function update()
     {
         $rules = [
-            'form.alasan' => 'required',
+            'form.alasan' => 'nullable',
             'form.cuti_type_id' => 'required',
             'form.tanggal_mulai' => 'required|date',
             'form.tanggal_selesai' => 'required|date|after_or_equal:form.tanggal_mulai',

@@ -74,8 +74,12 @@
                         <td class="px-6 py-4 text-sm text-gray-900">{{ $item->izin->user->name }}</td>
                         <td class="px-6 py-4 text-sm text-gray-900">{{ $item->izin->izinType->name }}</td>
                         <td class="px-6 py-4 text-sm text-gray-900">
-                            {{ \Carbon\Carbon::parse($item->izin->tanggal_mulai)->locale('id')->translatedFormat('d F Y') }} 🠖
-                            {{ \Carbon\Carbon::parse($item->izin->tanggal_selesai)->locale('id')->translatedFormat('d F Y') }}
+                            @if($item->izin->tanggal_mulai && $item->izin->tanggal_selesai)
+                                {{ \Carbon\Carbon::parse($item->izin->tanggal_mulai)->locale('id')->translatedFormat('d F Y, H:i') }} 🠖
+                                {{ \Carbon\Carbon::parse($item->izin->tanggal_selesai)->locale('id')->translatedFormat('d F Y, H:i') }}
+                            @else
+                                -
+                            @endif
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-900">{{ $item->izin->keperluan }}</td>
                         <td class="px-6 py-4 text-sm text-gray-900 flex justify-center items-center">
@@ -221,7 +225,7 @@
                                                     @if ($item->updated_at && $item->updated_at != $item->created_at)
                                                         {{ $item->updated_at->locale('id')->translatedFormat('d M Y H:i') }}
                                                     @else
-                                                        -
+                                                        belum diproses
                                                     @endif
                                                 </div>
                                             </div>

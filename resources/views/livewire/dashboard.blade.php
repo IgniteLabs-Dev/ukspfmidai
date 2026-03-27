@@ -97,7 +97,7 @@
                 <div class="rounded-xl border border-gray-200 bg-white overflow-hidden">
                     <div class="px-4 py-3 shadow bg-[var(--success)] flex items-center justify-between">
                         <h4 class="font-semibold text-white text-xl">Diterima</h4>
-                        <h4 class="font-semibold text-white text-xl">{{ $permohonanIzinSuccess }}</h4>
+                        <h4 class="font-semibold text-white text-xl">{{ $IzinSuccess }}</h4>
                     </div>
 
                     <div class="p-4 flex items-center justify-between">
@@ -214,7 +214,7 @@
                     <div class="rounded-xl border border-gray-200 bg-white overflow-hidden">
                         <div class="px-4 py-3 shadow bg-[var(--success)] flex items-center justify-between">
                             <h4 class="font-semibold text-white text-xl">Diterima</h4>
-                            <h4 class="font-semibold text-white text-xl">{{ $IzinSuccess }}</h4>
+                            <h4 class="font-semibold text-white text-xl">{{ $permohonanIzinSuccess }}</h4>
                         </div>
 
                         <div class="p-4 flex items-center justify-between">
