@@ -19,7 +19,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/register', fn() => view('pages.register'))->name('register');
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/', DashboardLivewire::class)->name('index');
+    Route::get('/dashboard', DashboardLivewire::class)->name('index');
     Route::get('/manajemen-user', ManajemenUser::class)->name('manajemen-user');
     Route::get('/manajemen-user/{id}/cuti', fn($id) => view('pages.manajamen-cuti-user', ['id' => $id]))->name('manajemen-cuti-user');
     Route::get('/pengajuan-cuti', PengajuanCuti::class)->name('pengajuan-cuti');
