@@ -12,6 +12,7 @@
     <title>@yield('title', 'UKSPFMIDAI')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('css/datepicker.css') }}" />
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
     @livewireStyles
     @stack('styles') {{-- buat custom CSS per page --}}
 </head>

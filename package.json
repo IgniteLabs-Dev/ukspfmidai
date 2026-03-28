@@ -16,6 +16,7 @@
     },
     "dependencies": {
         "@tailwindcss/vite": "^4.1.13",
+        "quill": "^2.0.3",
         "sweetalert2": "^11.26.1"
     }
 }

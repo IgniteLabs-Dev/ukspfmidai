@@ -2,42 +2,41 @@
 
 namespace App\Livewire;
 
-use App\Models\News;
 use App\Models\Tahun;
 use App\Services\CrudService;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-class ManajemenTahun extends Component
+class ManajemenBerita extends Component
 {
     use WithPagination;
     public $mode = 'view';
     public $editId = null;
     public $deleteId = null;
     public $filter = null;
-    public $title,$fill, $cover, $is_published ;
+    public $tahun, $status;
 
     protected $rules = [
 
-        'title' => 'required|string',
-        'fill' => 'required',
-        'cover' => 'required|image|max:2048',
-        'is_published' => 'required|boolean',
+        'tahun' => 'required|integer',
+        'status' => 'required|string',
+
     ];
 
     public function render()
     {
-        $data = News::when(!empty($this->filter), function ($query) {
+        $data = Tahun::when(!empty($this->filter), function ($query) {
             $query->where(function ($subquery) {
-                $subquery->where('title', 'like', '%' . $this->filter . '%')
-                ->orWhere('fill', 'like', '%' . $this->filter . '%');
+                $subquery->where('tahun', 'like', '%' . $this->filter . '%');
             });
         })
             ->orderBy('id', 'desc')
             ->paginate(10);
 
+        $scripts = $this->testscript();
 
-        return view('livewire.manajemen-tahun', compact('data'))->extends('layouts.master');
+
+        return view('livewire.manajemen-berita', compact('data','scripts'))->extends('layouts.master');
     }
     public function toggleMode()
     {
@@ -55,7 +54,7 @@ class ManajemenTahun extends Component
         $this->validate();
 
         $data = [
-            'title' => $this->title,
+            'tahun' => $this->tahun,
             'status' => $this->status,
         ];
 
@@ -94,5 +93,60 @@ class ManajemenTahun extends Component
     public function updatedFilter()
     {
         $this->resetPage();
+    }
+
+    public function testscript()
+    {
+        $script = <<<HTML
+@push('scripts')
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+
+<script>
+    let quill;
+
+    function initQuill() {
+        const el = document.getElementById('editor');
+        if (!el) return;
+
+        el.innerHTML = '';
+
+        quill = new Quill(el, {
+            theme: 'snow',
+            modules: {
+                toolbar: [
+                    [{ header: [1, 2, 3, false] }],
+                    ['bold', 'italic', 'underline'],
+                    [{ list: 'ordered' }, { list: 'bullet' }],
+                    ['link', 'image']
+                ]
+            }
+        });
+
+        if (window.quillContent) {
+            quill.root.innerHTML = window.quillContent;
+        }
+
+        quill.on('text-change', () => {
+            let html = quill.root.innerHTML;
+
+            window.quillContent = html;
+
+            Livewire.dispatch('setContent', { value: html });
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', initQuill);
+
+    document.addEventListener('livewire:commit', () => {
+        setTimeout(() => {
+            initQuill();
+        }, 50);
+    });
+</script>
+@endpush
+HTML;
+
+        return $script;
     }
 }

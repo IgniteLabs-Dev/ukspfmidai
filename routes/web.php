@@ -12,6 +12,7 @@ use App\Livewire\Dashboard as DashboardLivewire;
 use App\Livewire\PermohonanCuti;
 use App\Livewire\PreviewCuti;
 use App\Livewire\PreviewIzin;
+use App\Livewire\ManajemenBerita;
 
 Route::get('/login', [AuthController::class, 'indexLogin'])->name('login');
 Route::post('/login-store', [AuthController::class, 'loginStore'])->name('login-store');
@@ -31,4 +32,5 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/permohonan-izin', PermohonanIzin::class)->name('permohonan-izin');
     Route::get('/{id}/preview-izin', PreviewIzin::class)->name('preview-izin');
     Route::view('/manajemen-web', 'pages.manajemen-web')->name('manajemen-web');
+    Route::get('/manajemen-berita', ManajemenBerita::class)->name('manajemen-berita');
 });
