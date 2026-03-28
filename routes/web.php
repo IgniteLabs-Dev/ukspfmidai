@@ -13,6 +13,7 @@ use App\Livewire\PermohonanCuti;
 use App\Livewire\PreviewCuti;
 use App\Livewire\PreviewIzin;
 use App\Livewire\ManajemenBerita;
+use \App\Http\Controllers\BeritaController;
 
 Route::get('/login', [AuthController::class, 'indexLogin'])->name('login');
 Route::post('/login-store', [AuthController::class, 'loginStore'])->name('login-store');
@@ -33,4 +34,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/{id}/preview-izin', PreviewIzin::class)->name('preview-izin');
     Route::view('/manajemen-web', 'pages.manajemen-web')->name('manajemen-web');
     Route::get('/manajemen-berita', ManajemenBerita::class)->name('manajemen-berita');
+    Route::get('/manajemen-berita/create', [BeritaController::class, 'createBerita'])->name('manajemen-berita-create');
+    Route::post('/manajemen-berita/store', [BeritaController::class, 'store'])->name('manajemen-berita-store');
+    Route::get('/manajemen-berita/{id}/edit', [BeritaController::class, 'editBerita'])->name('manajemen-berita-edit');
+    Route::put('/manajemen-berita/{id}', [BeritaController::class, 'updateBerita'])->name('manajemen-berita-update');
 });

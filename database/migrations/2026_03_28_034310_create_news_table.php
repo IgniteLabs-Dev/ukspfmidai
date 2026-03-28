@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
 
             $table->string('title');
-            $table->text('fill');
+            $table->text('content');
             $table->string('cover')->nullable();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->boolean('is_published')->default(true);

@@ -146,7 +146,7 @@
                                 <path d="M8 8l4 0" /><path d="M8 12l4 0" /><path d="M8 16l4 0" />
                             </svg>
 
-                            <span class="flex-1 ms-3 whitespace-nowrap">Manajemen Berita</span>
+                            <span class="flex-1 ms-2 whitespace-nowrap">Manajemen Berita</span>
                         </a>
                     </li>
                 @endif
