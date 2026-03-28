@@ -1,6 +1,6 @@
 <div>
-    <div>
-<div class="my-3 flex justify-between">
+    <div class="md:mt-0 mt-15">
+<div class="mb-3 flex justify-between items-center gap-2">
     <a href="{{ route('manajemen-user') }}">
         <button
             class="inline-flex cursor-pointer items-center justify-center w-8 h-8 rounded-md bg-[var(--primary)] text-white p-0 m-0">
@@ -15,34 +15,38 @@
         <div class="bg-white rounded-xl p-4">
 
             <div class="p-4">
-                    <div class="flex justify-between">
-                        <div class="flex gap-2">
-
-
-                        <h2 class="p-0 m-0 text-start text-2xl font-bold">Cuti {{ $user->name }}</h2>
-                        </div>
-                        <div class="flex gap-2">
-                            <x-select label="" for="tahun" wire="tahun" wireType="change" placeholder="Semua Tahun"
-                                      :options="$tahunData" :required="false" />
-                            <x-select label="" for="bulan" wire="bulan" wireType="change" placeholder="Semua Bulan"
-                                      :options="[
-                                            '1' => 'Januari',
-                                            '2' => 'Februari',
-                                            '3' => 'Maret',
-                                            '4' => 'April',
-                                            '5' => 'Mei',
-                                            '6' => 'Juni',
-                                            '7' => 'Juli',
-                                            '8' => 'Agustus',
-                                            '9' => 'September',
-                                            '10' => 'Oktober',
-                                            '11' => 'November',
-                                            '12' => 'Desember',
-                                        ]" :required="false" />
-                        <x-select label="" for="cutiTypeFilter" wire="cutiTypeFilter" wireType="change" placeholder="Semua Cuti" :options="$cutiTypes" />
-                        </div>
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-4">
+                    {{-- Bagian Judul --}}
+                    <div class="flex items-center gap-2">
+                        <h2 class="p-0 m-0 text-start text-xl sm:text-2xl font-bold text-gray-800">
+                            Cuti {{ $user->name }}
+                        </h2>
                     </div>
 
+                    {{-- Bagian Filter: Grid 2 kolom di mobile, Flex di desktop --}}
+                    <div class="grid grid-cols-2 md:flex md:flex-row gap-2 items-center">
+                        {{-- Tahun --}}
+                        <div class="col-span-1 md:w-32">
+                            <x-select label="" for="tahun" wire="tahun" wireType="change" placeholder="Semua Tahun"
+                                      :options="$tahunData" :required="false" />
+                        </div>
+
+                        {{-- Bulan --}}
+                        <div class="col-span-1 md:w-40">
+                            <x-select label="" for="bulan" wire="bulan" wireType="change" placeholder="Bulan"
+                                      :options="[
+                            '1' => 'Januari', '2' => 'Februari', '3' => 'Maret', '4' => 'April',
+                            '5' => 'Mei', '6' => 'Juni', '7' => 'Juli', '8' => 'Agustus',
+                            '9' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember',
+                        ]" :required="false" />
+                        </div>
+
+                        {{-- Tipe Cuti: Full width di mobile (grid-span-2) --}}
+                        <div class="col-span-2 md:w-48">
+                            <x-select label="" for="cutiTypeFilter" wire="cutiTypeFilter" wireType="change" placeholder="Semua Cuti" :options="$cutiTypes" />
+                        </div>
+                    </div>
+                </div>
                     <div class="flex flex-col md:flex-row gap-4 mt-3">
                         <div class="flex-1">
                             <div class="flex justify-between items-center mb-2">

@@ -1,6 +1,6 @@
-<div>
+<div class="md:block hidden">
     <aside id="default-sidebar"
-        class="flex bg-white z-10 top-0 left-0 border-r-1 border-gray-200 h-screen transition-transform -translate-x-full sm:translate-x-0"
+        class="flex bg-white z-10 top-0 left-0 border-r-1 border-gray-200 h-screen transition-transform -translate-x-full sm:translate-x-0  "
         aria-label="Sidebar">
         <div class="h-full px-4 py-4 overflow-y-auto bg-white">
 
@@ -10,7 +10,7 @@
             </a>
             <ul class="space-y-2 font-medium mt-6">
                 <li>
-                    <a href="{{ route('index') }}"
+                    <a href="{{ route('dashboard') }}"
                         class="flex items-center p-2  text-gray-900 rounded-lg hover:bg-gray-100 group {{ request()->routeIs('index') ? 'bg-gray-100' : '' }}">
                         <svg class="w-5 h-5 text-gray-500 transition duration-75 {{ request()->routeIs('index') ? 'text-gray-900' : 'group-hover:text-gray-900' }}"
                             aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
@@ -140,7 +140,7 @@
                         </a>
                     </li>              <li>
                         <a href="{{ route('manajemen-berita') }}"
-                            class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group {{ request()->routeIs('manajemen-berita') ? 'bg-gray-100' : '' }}">
+                            class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group {{ request()->routeIs('manajemen-berita*') ? 'bg-gray-100' : '' }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M16 6h3a1 1 0 0 1 1 1v11a2 2 0 0 1 -4 0v-13a1 1 0 0 0 -1 -1h-10a1 1 0 0 0 -1 1v12a3 3 0 0 0 3 3h11" />
                                 <path d="M8 8l4 0" /><path d="M8 12l4 0" /><path d="M8 16l4 0" />

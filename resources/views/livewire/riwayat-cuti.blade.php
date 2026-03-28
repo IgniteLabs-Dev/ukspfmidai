@@ -1,4 +1,4 @@
-<div class="bg-white rounded-xl p-4">
+<div class="bg-white rounded-xl p-4 md:mt-0 mt-15">
     <h2 class="text-2xl mb-5 font-bold text-center">
         Riwayat Cuti
     </h2>
@@ -93,7 +93,8 @@
                                 </button>
                             </div>
                         </td>
-                        <td class="px-6 py-4 text-sm text-gray-900 flex justify-center gap-1">
+                        <td class="px-6 py-4 text-sm text-gray-900 ">
+                            <div class="flex gap-1 justify-center ">
                             <button @click="$dispatch('open-pdf', { url: '{{ asset('files/cuti/'. $item->doc) }}' })"
                                     class="bg-[var(--primary)] text-white px-1 py-1 rounded-md cursor-pointer hover:scale-105">
                                 <i class="fa-solid fa-eye"></i>
@@ -119,6 +120,7 @@
                                     <i class="fa-solid fa-circle-info"></i>
                                 </button>
                             @endif
+                            </div>
                         </td>
                     </tr>
                 @empty

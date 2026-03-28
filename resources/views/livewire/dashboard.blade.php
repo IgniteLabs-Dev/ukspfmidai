@@ -1,5 +1,5 @@
 <div>
-    <div class="bg-white rounded-xl p-4">
+    <div class="bg-white rounded-xl p-4 md:mt-0 mt-15">
         <div class="  rounded-xl  ">
             <!-- Riwayat Cuti -->
             <h2 class="text-2xl font-semibold mb-3">Riwayat Cuti</h2>

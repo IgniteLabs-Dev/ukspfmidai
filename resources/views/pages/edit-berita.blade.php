@@ -2,7 +2,7 @@
 
 @section('title', 'Tambah Berita')
 @section('content')
-    <div class="bg-white rounded-xl p-4 mb-8">
+    <div class="bg-white rounded-xl p-4 mb-8 md:mt-0 mt-15">
         <div class="w-full">
             <h2 class="text-3xl font-bold text-center mb-6">Perbarui Berita</h2>
 
@@ -14,8 +14,8 @@
                     <div class="flex flex-col gap-4">
 
                         <!-- Judul & Status -->
-                        <div class="w-full flex gap-2">
-                            <div class="w-[85%]">
+                        <div class="w-full flex md:flex-row flex-col gap-2">
+                            <div class="w-[85%] w-full">
                                 <x-input
                                     label="Judul"
                                     name="title"
@@ -26,7 +26,7 @@
                                     value="{{ old('title', $berita->title) }}"
                                 />
                             </div>
-                            <div class="w-[15%]">
+                            <div class="w-[15%] w-full">
                                 <div>
                                     <label for="is_published" class="block mb-2 text-sm font-medium text-gray-900">
                                         Status Berita

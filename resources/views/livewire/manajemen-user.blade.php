@@ -48,7 +48,7 @@
                                     <td class="px-6 py-4">{{ $item->jabatan->name ?? '-' }}</td>
                                     <td class="px-6 py-4">{{ $item->pangkatRef->name ?? '-' }}</td>
                                     <td class="px-6 py-4">{{ $item->nomor_wa ?? '-' }}</td>
-                                    <td class="text-center justify-center">
+                                    <td class="px-6 py-4  md:text-center">
                                         <a href="{{ route('manajemen-cuti-user', ['id' => $item->id]) }}">
                                             <button type="button"
                                                     class="text-white bg-[var(--info)] cursor-pointer hover:brightness-90 font-medium rounded-lg text-sm w-full sm:w-auto px-1.5 py-1.5 text-center hover:cursor-pointer hover:scale-102 transition-transform duration-200">
@@ -56,7 +56,7 @@
                                             </button>
                                         </a>
                                     </td>
-                                    <td class="text-center justify-center">
+                                    <td class=" px-6 py-4">
                                         @if($userId != $item->id &&(auth()->user()->role == 'SUPERADMIN' ||$item->role != 'SUPERADMIN'))
                                             @if ($deleteId != $item->id)
                                                 <div class="flex flex-row gap-1 justify-center">

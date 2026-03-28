@@ -3,28 +3,35 @@
 @section('title', 'Manajemen Web')
 
 @section('content')
-    <div class="bg-white rounded-xl p-4 mb-2">
-         @livewire('manajemen-approval-level-cuti')
-    </div>
-    <div class="bg-white rounded-xl p-4 mb-2">
-         @livewire('manajemen-approval-level-izin')
-    </div>
-    <div class="w-full grid gap-2 grid-cols-2">
-        <div class="bg-white  rounded-xl p-4 mb-2">
-            @livewire('manajemen-izin')
-        </div>
-        <div class="bg-white rounded-xl p-4 mb-2">
-            @livewire('manajemen-cuti')
+    {{-- Section Atas: Full Width --}}
+    <div class="space-y-4 mt-15">
+        <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+            @livewire('manajemen-approval-level-cuti')
         </div>
 
-    </div>
-    <div class="w-full grid gap-2 grid-cols-2">
-        <div class="bg-white rounded-xl p-4 mb-2">
-            @livewire('manajemen-pangkat')
+        <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+            @livewire('manajemen-approval-level-izin')
         </div>
-        <div class="bg-white rounded-xl p-4 mb-2">
-            @livewire('manajemen-jabatan')
-        </div>
-    </div>
 
+        {{-- Section Tengah: Izin & Cuti --}}
+        {{-- grid-cols-1 pada mobile, md:grid-cols-2 pada desktop --}}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+                @livewire('manajemen-izin')
+            </div>
+            <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+                @livewire('manajemen-cuti')
+            </div>
+        </div>
+
+        {{-- Section Bawah: Pangkat & Jabatan --}}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+                @livewire('manajemen-pangkat')
+            </div>
+            <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+                @livewire('manajemen-jabatan')
+            </div>
+        </div>
+    </div>
 @endsection

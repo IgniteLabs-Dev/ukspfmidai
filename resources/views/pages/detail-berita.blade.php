@@ -17,11 +17,12 @@
 
 <!-- Navbar -->
 <nav class="sticky top-0 z-50  bg-white/80 shadow-xs backdrop-blur-md border-b border-gray-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="lg:px-25 xl:50 px-3 w-full">
         <div class="flex justify-between h-16 items-center">
-            <div class="flex items-center ">
-                <a href="{{ route('index') }}" >
-                    <span class="text-2xl font-bold tracking-tight text-[var(--primary)]">UKSPFMIDAI</span>
+            <div class="">
+                <a href="{{ route('index') }}" class="flex gap-2 items-center" >
+                    <img src="{{ asset('images/logo.png') }}" class="h-8 w-auto" alt="Logo">
+                    <span class="text-2xl font-bold tracking-tight text-black">UKSPFMIDAI</span>
                 </a>
             </div>
 
@@ -51,7 +52,8 @@
     </div>
 </nav>
 
-<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-white my-4 rounded-xl shadow-sm ">
+<div class="lg:px-25 xl:50 px-3 flex justify-center">
+<main class=" mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-white my-4 rounded-xl shadow-sm ">
     <article class="prose lg:prose-xl">
         <h1 class="text-4xl font-bold">{{ $data->title }}</h1>
         <div class="flex gap-2 mt-2">
@@ -63,6 +65,7 @@
         <div>{!! $data->content !!}</div>
     </article>
 </main>
+</div>
 
 <footer class="bg-gray-900 text-white   py-4 text-center">
     <span class="text-gray-300">{{ now()->year }} - UKSPFMIDAI</span>

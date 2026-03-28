@@ -1,45 +1,40 @@
-<div class="bg-white rounded-xl p-4">
+<div class="bg-white rounded-xl p-4 md:mt-0 mt-15">
     <h2 class="text-2xl mb-5 font-bold text-center">
         Riwayat Izin
     </h2>
     <!-- Filters -->
-    <div class="flex flex-col sm:flex-row gap-4 mb-6">
-        <div class="flex-1">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-6 items-end">
+        <div class="w-full">
             <x-select label="Tipe Izin" for="izinType" wire="izinType" wireType="change" placeholder="Semua Tipe Izin"
-                :options="$izinTypesData" :required="false" />
+                      :options="$izinTypesData" :required="false" />
         </div>
-        <div class="flex-1">
+
+        <div class="w-full">
             <x-select label="Tahun" for="tahun" wire="tahun" wireType="change" placeholder="Semua Tahun"
-                :options="$tahunData" :required="false" />
+                      :options="$tahunData" :required="false" />
         </div>
-        <div class="flex-1">
+
+        <div class="w-full">
             <x-select label="Bulan" for="bulan" wire="bulan" wireType="change" placeholder="Semua Bulan"
                       :options="[
-                    '1' => 'Januari',
-                    '2' => 'Februari',
-                    '3' => 'Maret',
-                    '4' => 'April',
-                    '5' => 'Mei',
-                    '6' => 'Juni',
-                    '7' => 'Juli',
-                    '8' => 'Agustus',
-                    '9' => 'September',
-                    '10' => 'Oktober',
-                    '11' => 'November',
-                    '12' => 'Desember',
-                ]" :required="false" />
+                '1' => 'Januari', '2' => 'Februari', '3' => 'Maret', '4' => 'April',
+                '5' => 'Mei', '6' => 'Juni', '7' => 'Juli', '8' => 'Agustus',
+                '9' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember',
+            ]" :required="false" />
         </div>
-        <div class="flex-1">
+
+        <div class="w-full">
             <x-select label="Status" for="status" wire="status" wireType="change" placeholder="Semua Status"
-                :options="[
-                    'failed' => 'Ditolak',
-                    'pending' => 'Menunggu',
-                    'success' => 'Diterima',
-                ]" />
+                      :options="[
+                'failed' => 'Ditolak',
+                'pending' => 'Menunggu',
+                'success' => 'Diterima',
+            ]" />
         </div>
-        <div class="flex-1">
+
+        <div class="w-full sm:col-span-2 lg:col-span-1">
             <x-input label="Pencarian" for="filter" wire="filter" wireType="live" type="text"
-                placeholder="Masukkan Keperluan" />
+                     placeholder="Masukkan Keperluan" />
         </div>
     </div>
 
@@ -97,8 +92,8 @@
                                 </button>
                             </div>
                         </td>
-                        <td class="px-6 py-4 text-sm text-gray-900 flex justify-center gap-1">
-
+                        <td class="px-6 py-4 text-sm text-gray-900 ">
+                            <div class="flex gap-1 justify-center ">
                             <button @click="$dispatch('open-pdf', { url: '{{ asset('files/izin/'. $item->doc) }}' })"
                                     class="cursor-pointer bg-[var(--primary)] text-white px-1 py-1 rounded-md  hover:scale-105">
                                 <i class="fa-solid fa-eye"></i>
@@ -125,6 +120,7 @@
                                     <i class="fa-solid fa-circle-info"></i>
                                 </button>
                             @endif
+                            </div>
                         </td>
                     </tr>
                 @empty

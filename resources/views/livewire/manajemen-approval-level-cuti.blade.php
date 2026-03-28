@@ -1,120 +1,93 @@
-<div>
-    <div class="w-full">
-        <h2 class="text-3xl font-bold text-center mb-4">Manajemen Langkah Approval Cuti</h2>
+<div class="w-full">
+    <div class="mb-6">
+        <h2 class="text-xl sm:text-3xl font-bold text-center text-gray-800">Manajemen Langkah Approval Cuti</h2>
     </div>
-    <div class="relative flex items-center space-x-4">
-        <div class="items-center flex flex-wrap">
-            <ol
-                class="flex items-start grid grid-flow-col auto-cols-fr overflow-hidden rounded-lg text-sm text-gray-600 me-3
-        {{ count($data) > 1 ? 'divide-x divide-gray-100 ' : 'border-0 divide-x-0' }}">
+
+    <div class="flex flex-col lg:flex-row items-start lg:items-center gap-4">
+        {{-- List Utama --}}
+        <div class="w-full lg:flex-1">
+            <ol class="flex flex-col md:grid md:grid-flow-col md:auto-cols-fr overflow-hidden rounded-lg text-sm text-gray-600 border border-gray-200 shadow-sm">
 
                 @forelse ($data as $item)
-                    <li class="relative  justify-center gap-2 p-4 odd:bg-gray-100 even:bg-gray-200">
+                    <li class="relative flex flex-col justify-center p-4 odd:bg-gray-50 even:bg-gray-100 border-b md:border-b-0 last:border-b-0">
 
-                        {{-- Panah kiri (bukan item pertama) → ikut warna sebelumnya --}}
+                        {{-- Logika Panah: Hanya muncul di layar Desktop (md ke atas) --}}
                         @if (!$loop->first)
-                            <span
-                                class="absolute top-1/2 -left-2 hidden size-4 -translate-y-1/2 rotate-45 border border-gray-100 sm:block
-                        border-s-0 border-t-0
-                        {{ $loop->even ? 'bg-gray-100' : 'bg-gray-200' }}">
+                            <span class="absolute top-1/2 -left-2 hidden md:block size-4 -translate-y-1/2 rotate-45 border border-gray-100 z-10
+                                border-s-0 border-t-0 {{ $loop->even ? 'bg-gray-50' : 'bg-gray-100' }}">
                             </span>
                         @endif
 
-                        {{-- Panah kanan (bukan item terakhir) → ikut warna sekarang --}}
                         @if (!$loop->last)
-                            <span
-                                class="absolute top-1/2 -right-2 hidden size-4 -translate-y-1/2 rotate-45 border border-gray-100 sm:block
-                        border-e-0 border-b-0
-                        {{ $loop->odd ? 'bg-gray-100' : 'bg-gray-200' }}">
+                            <span class="absolute top-1/2 -right-2 hidden md:block size-4 -translate-y-1/2 rotate-45 border border-gray-100 z-10
+                                border-e-0 border-b-0 {{ $loop->odd ? 'bg-gray-50' : 'bg-gray-100' }}">
                             </span>
                         @endif
 
-                        {{-- Isi utama item --}}
+                        {{-- Isi Utama --}}
                         @if ($editId !== $item->id)
-                            <div class="flex items-center justify-between w-full">
-                                <div class="flex items-center me-2">
-                                    <span
-                                        class="flex items-center justify-center w-5 h-5 me-2 text-xs font-bold border-2 rounded-full shrink-0">
+                            <div class="flex items-center justify-between w-full gap-2">
+                                <div class="flex items-center min-w-0">
+                                    <span class="flex items-center justify-center w-6 h-6 me-2 text-xs font-bold border-2 border-gray-400 rounded-full shrink-0">
                                         {{ $loop->index + 1 }}
                                     </span>
-                                    <h3 class="font-semibold text-lg">{{ $item->jabatan->name }}</h3>
+                                    <h3 class="font-semibold text-base sm:text-lg truncate">{{ $item->jabatan->name }}</h3>
                                 </div>
 
-                                <div class="flex gap-1">
+                                <div class="flex gap-1 shrink-0">
                                     @if ($deleteId != $item->id)
-                                        <x-button wire:click="edit({{ $item->id }})" bg="[var(--warning)]"
-                                            px="1" py="0.5"
-                                            label='<i class="fa-solid fa-xs fa-pen"></i>' />
-                                        <x-button wire:click="$set('deleteId', {{ $item->id }})"
-                                            bg="[var(--danger)]" px="1" py="0.5"
-                                            label='<i class="fa-solid fa-xs fa-trash"></i>' />
+                                        <x-button wire:click="edit({{ $item->id }})" bg="[var(--warning)]" px="2" py="1" label='<i class="fa-solid fa-xs fa-pen"></i>' />
+                                        <x-button wire:click="$set('deleteId', {{ $item->id }})" bg="[var(--danger)]" px="2" py="1" label='<i class="fa-solid fa-xs fa-trash"></i>' />
                                     @else
-                                        <div class="flex-col">
-                                            <p class="text-center">Apa anda yakin?</p>
-                                            <div class="flex flex-row gap-1 justify-center mb-1">
-                                                <x-button wire:click="$set('deleteId', null)" bg="[var(--success)]"
-                                                    px="0.5" py="0.5"
-                                                    label='<i class="fa-solid fa-x"></i>' />
-                                                <x-button wire:click="delete({{ $item->id }})" bg="[var(--danger)]"
-                                                    px="0.5" py="0.5"
-                                                    label='<i class="fa-solid fa-check"></i>' />
+                                        <div class="flex flex-col items-center bg-white p-1 rounded shadow-sm border border-red-200">
+                                            <span class="text-[10px] font-bold text-red-600 mb-1">Yakin?</span>
+                                            <div class="flex gap-1">
+                                                <x-button wire:click="$set('deleteId', null)" bg="gray-500" px="1.5" py="0.5" label='<i class="fa-solid fa-x fa-xs"></i>' />
+                                                <x-button wire:click="delete({{ $item->id }})" bg="[var(--danger)]" px="1.5" py="0.5" label='<i class="fa-solid fa-check fa-xs"></i>' />
                                             </div>
                                         </div>
                                     @endif
                                 </div>
                             </div>
                         @else
-                            {{-- Mode edit --}}
-                            <div class="flex-row flex items-center gap-2">
-                                <div class="">
-                                    <x-select label="" placeholder="Pilih Jabatan" for="jabatan_id" wire="jabatan_id" :options="$jabatanTypes"
-                                        :required="true" />
+                            {{-- Mode Edit --}}
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+                                <div class="w-full">
+                                    <x-select label="" placeholder="Jabatan" for="jabatan_id" wire="jabatan_id" :options="$jabatanTypes" :required="true" />
                                 </div>
-
-                                <div class="flex items-center gap-2 mt-2">
-                                    <x-button wire:click="resetInput" bg="[var(--danger)]" px="1.5" py="1"
-                                        label='<i class="fa-solid fa-sm fa-x"></i>' />
-                                    <x-button wire:click="update({{ $item->id }})" bg="[var(--success)]"
-                                        px="1.5" py="1" label='<i class="fa-solid fa-sm fa-check"></i>' />
+                                <div class="flex gap-1">
+                                    <x-button wire:click="update({{ $item->id }})" bg="[var(--success)]" px="1" py="1" label='<i class="fa-solid fa-check"></i>' />
+                                    <x-button wire:click="resetInput" bg="[var(--danger)]" px="1" py="1" label='<i class="fa-solid fa-x"></i>' />
                                 </div>
                             </div>
                         @endif
-
                     </li>
-
                 @empty
-                    <li class="p-4 text-center text-gray-600 bg-gray-50 flex items-center">
-                        No steps available
-                    </li>
+                    <li class="p-8 text-center text-gray-400 italic">Belum ada langkah approval.</li>
                 @endforelse
+
+                {{-- Mode Create (Input baru di dalam list) --}}
                 @if ($mode == 'create')
-                    <div class="px-3 w-auto items-center justify-between">
-                        <div class="flex-row flex items-center gap-2 border border-2 border-dashed bg-gray-100 border-gray-300 rounded-md p-2">
-                            <div class="">
-                                <x-select label="" placeholder="Pilih Jabatan" for="jabatan_id" wire="jabatan_id" :options="$jabatanTypes"
-                                    :required="true" />
+                    <li class="p-4 bg-blue-50 border-2 border-dashed border-blue-200">
+                        <div class="flex flex-col sm:flex-row items-center gap-2">
+                            <div class="w-full">
+                                <x-select label="" placeholder="Pilih Jabatan Baru" for="jabatan_id" wire="jabatan_id" :options="$jabatanTypes" :required="true" />
                             </div>
-                            <div class="flex items-center gap-2 ">
-                                <x-button wire:click="resetInput()" bg="[var(--danger)]" px="1" py="1"
-                                    label='<i class="fa-solid  fa-x"></i>' />
-                                <x-button wire:click="create" bg="[var(--success)]" px="1" py="1"
-                                    label='<i class="fa-solid  fa-check"></i>' />
+                            <div class="flex gap-1">
+                                <x-button wire:click="create" bg="[var(--success)]" px="1" py="1" label='<i class="fa-solid fa-check"></i>' />
+                                <x-button wire:click="resetInput()" bg="[var(--danger)]" px="1" py="1" label='<i class="fa-solid fa-x"></i>' />
                             </div>
                         </div>
-                    </div>
+                    </li>
                 @endif
             </ol>
-            @if ($mode == 'view')
-                {{-- Tombol tambah --}}
-                <div class="">
-                    <x-button wire:click="toggleMode" bg="[var(--success)]" px="1" py="1"
-                        label='<i class="fa-solid fa-lg fa-plus"></i>' />
-                </div>
-            @endif
         </div>
 
-
-
-
+        {{-- Tombol Tambah --}}
+        @if ($mode == 'view')
+            <div class="shrink-0 self-center lg:self-auto">
+                <x-button wire:click="toggleMode" bg="[var(--success)]" px="1" py="1" label='<i class="fa-solid fa-plus"></i> <span class="lg:hidden ms-2">Tambah</span>' />
+            </div>
+        @endif
     </div>
 </div>

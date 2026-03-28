@@ -19,9 +19,10 @@
 <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16 items-center">
-            <div class="flex items-center gap-2">
-                <a href="{{ route('index') }}" >
-                    <span class="text-2xl font-bold tracking-tight text-[var(--primary)]">UKSPFMIDAI</span>
+            <div class="">
+                <a href="{{ route('index') }}" class="flex gap-2 items-center" >
+                    <img src="{{ asset('images/logo.png') }}" class="h-8 w-auto" alt="Logo">
+                    <span class="text-2xl font-bold tracking-tight text-black">UKSPFMIDAI</span>
                 </a>
             </div>
 
