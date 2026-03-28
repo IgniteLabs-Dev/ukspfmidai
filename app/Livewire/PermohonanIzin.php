@@ -2,12 +2,15 @@
 
 namespace App\Livewire;
 
+use App\Mail\NotificationMail;
 use App\Models\CutiApprovalWorkflow;
 use App\Models\Izin;
 use App\Models\IzinApprovalWorkflow;
 use App\Models\IzinType;
 use App\Models\Tahun;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -151,6 +154,20 @@ class PermohonanIzin extends Component
                 }
             });
 
+            $emailData = Izin::find($id);
+            if ($emailData){
+                Mail::to($emailData->user->email)->send(new NotificationMail([
+                    'status' => 'success', // atau 'failed'
+                    'nama' => $emailData->user->name,
+                    'jenis' => $emailData->izinType->name,
+                    'tanggal_mulai' => Carbon::parse($emailData->tanggal_mulai)->locale('id')->translatedFormat('d F Y - H:i'),
+                    'tanggal_selesai' => Carbon::parse($emailData->tanggal_selesai)->locale('id')->translatedFormat('d F Y - H:i'),
+                    'keterangan' => $emailData->keperluan ?? '-',
+                    'alasan' => null,
+                    'tipe' => 'izin'
+                ]));
+            }
+
             LivewireAlert::title('Approval Izin Berhasil!')
                 ->position('top-end')
                 ->toast()
@@ -197,6 +214,20 @@ class PermohonanIzin extends Component
                 ->toast()
                 ->success()
                 ->show();
+
+            $emailData = Izin::find($id);
+            if ($emailData){
+                Mail::to($emailData->user->email)->send(new NotificationMail([
+                    'status' => 'failed', // atau 'failed'
+                    'nama' => $emailData->user->name,
+                    'jenis' => $emailData->izinType->name,
+                    'tanggal_mulai' => Carbon::parse($emailData->tanggal_mulai)->locale('id')->translatedFormat('d F Y - H:i'),
+                    'tanggal_selesai' => Carbon::parse($emailData->tanggal_selesai)->locale('id')->translatedFormat('d F Y - H:i'),
+                    'keterangan' => $emailData->keperluan ?? '-',
+                    'alasan' => $emailData->alasan_ditolak ?? '-',
+                    'tipe' => 'izin'
+                ]));
+            }
         } else {
             LivewireAlert::title('Tidak ada approval yang menunggu untuk jabatan ini')
                 ->position('top-end')

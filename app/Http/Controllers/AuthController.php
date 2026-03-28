@@ -20,40 +20,12 @@ class AuthController extends Controller
         $token = $request->bearerToken() ?? $request->cookie('token');
 
         if ($token) {
-            return redirect()->route('index');
+            return redirect()->route('dashboard');
         } else {
             return view('pages.login');
         }
     }
 
-    public function registerStore(Request $request)
-    {
-
-        $validator = Validator::make($request->all(), [
-            'password' => 'required|min:5',
-            'email'    => 'required|email|unique:users',
-            'name'     => 'required',
-        ]);
-
-
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-        }
-
-
-        $user = User::create([
-            'password' => bcrypt($request->password),
-            'email'    => $request->email,
-            'name'     => $request->name,
-            'role'     => 'ADMIN',
-            'status'     => 'active',
-            'jabatan'     => '1',
-            'atasan_langsung'     => '1',
-            'atasan_atasan_langsung'     => '1',
-        ]);
-
-        return redirect()->route('login');
-    }
 
     public function loginStore(Request $request)
     {
@@ -80,13 +52,13 @@ class AuthController extends Controller
 
         $cookie = $this->getCookieWithToken($token);
 
-        return redirect()->route('index')->withCookie($cookie);
+        return redirect()->route('dashboard')->withCookie($cookie);
     }
 
     public function logout(Request $request)
     {
         $cookie = Cookie::forget('token');
-        return redirect('/')->withCookie($cookie);
+        return redirect('/dashboard')->withCookie($cookie);
     }
 
 

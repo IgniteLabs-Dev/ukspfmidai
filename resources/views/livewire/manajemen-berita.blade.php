@@ -3,6 +3,38 @@
         <h2 class="text-xl sm:text-3xl font-bold text-center text-gray-800">Manajemen Berita</h2>
     </div>
 
+    @if(session('success'))
+        <div id="alert-success" class="mb-4 flex justify-center w-full">
+            <div class="relative px-4 py-3 rounded-lg bg-green-100 text-green-700 text-sm font-semibold w-full">
+
+                {{ session('success') }}
+
+                <button
+                    onclick="closeAlert('alert-success')"
+                    class="absolute cursor-pointer top-2 right-2 w-8 h-8 flex items-center justify-center text-green-600 hover:text-green-800 text-xl font-bold rounded-full hover:bg-green-200 transition">
+                    <i class="fa-solid fa-circle-xmark "></i>
+                </button>
+
+            </div>
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div id="alert-error" class="mb-4 flex justify-center">
+            <div class="relative px-4 py-2 rounded-lg bg-red-100 text-red-700 border border-red-300 text-sm font-semibold shadow-sm">
+
+                {{ session('error') }}
+
+                <button
+                    onclick="closeAlert('alert-success')"
+                    class="absolute cursor-pointer top-2 right-2 w-8 h-8 flex items-center justify-center text-green-600 hover:text-green-800 text-xl font-bold rounded-full hover:bg-green-200 transition">
+                    <i class="fa-solid fa-circle-xmark "></i>
+                </button>
+
+            </div>
+        </div>
+    @endif
+
     <div class="w-full">
         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mt-4">
             <div class="flex-1">
@@ -104,4 +136,16 @@
             </div>
         </div>
     </div>
+    @push('scripts')
+        <script>
+            function closeAlert(id) {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.style.transition = "opacity 0.3s";
+                    el.style.opacity = "0";
+                    setTimeout(() => el.remove(), 300);
+                }
+            }
+        </script>
+    @endpush
 </div>

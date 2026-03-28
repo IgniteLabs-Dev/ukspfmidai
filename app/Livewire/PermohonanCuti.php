@@ -2,11 +2,15 @@
 
 namespace App\Livewire;
 
+use App\Mail\NotificationMail;
 use App\Models\Cuti;
 use App\Models\CutiApprovalWorkflow;
 use App\Models\CutiType;
+use App\Models\Izin;
 use App\Models\Tahun;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -147,6 +151,20 @@ class PermohonanCuti extends Component
                 }
             });
 
+            $emailData = Cuti::find($id);
+            if ($emailData){
+                Mail::to($emailData->user->email)->send(new NotificationMail([
+                    'status' => 'success', // atau 'failed'
+                    'nama' => $emailData->user->name,
+                    'jenis' => $emailData->cutiType->name,
+                    'tanggal_mulai' => Carbon::parse($emailData->tanggal_start)->locale('id')->translatedFormat('d F Y'),
+                    'tanggal_selesai' => Carbon::parse($emailData->tanggal_end)->locale('id')->translatedFormat('d F Y'),
+                    'keterangan' => $emailData->alasan ?? '-',
+                    'alasan' => $emailData->alasan_ditolak ?? '-',
+                    'tipe' => 'cuti'
+                ]));
+            }
+
             LivewireAlert::title('Approval Cuti Berhasil!')
                 ->position('top-end')
                 ->toast()
@@ -188,6 +206,21 @@ class PermohonanCuti extends Component
                 $cuti->alasan_ditolak = $this->alasanDitolak;
                 $cuti->save();
             });
+
+            $emailData = Cuti::find($id);
+            if ($emailData){
+                Mail::to($emailData->user->email)->send(new NotificationMail([
+                    'status' => 'failed', // atau 'failed'
+                    'nama' => $emailData->user->name,
+                    'jenis' => $emailData->cutiType->name,
+                    'tanggal_mulai' => Carbon::parse($emailData->tanggal_start)->locale('id')->translatedFormat('d F Y'),
+                    'tanggal_selesai' => Carbon::parse($emailData->tanggal_end)->locale('id')->translatedFormat('d F Y'),
+                    'keterangan' => $emailData->alasan ?? '-',
+                    'alasan' => $emailData->alasan_ditolak ?? '-',
+                    'tipe' => 'cuti'
+                ]));
+            }
+
 
             LivewireAlert::title('Reject Cuti Berhasil!')
                 ->position('top-end')

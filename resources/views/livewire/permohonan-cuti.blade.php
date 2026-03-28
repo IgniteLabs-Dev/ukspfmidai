@@ -116,10 +116,30 @@
                             <div class="flex justify-center gap-1">
                                 @if ($item->status === 'waiting')
                                     <input type="hidden" wire:model="alasanDitolak" id="alasanDitolakField" />
-                                    <x-button wire:anow-confirm.reject="Apakah anda yakin ingin menolak?" wire:click="reject({{ $item->cuti->id }})" bg="[var(--danger)]" px="1"
-                                              py="1" label='<i class="fa-solid fa-circle-xmark"></i>' />
-                                    <x-button wire:anow-confirm="Apakah anda yakin?" wire:click="approve({{ $item->cuti->id }})" bg="[var(--success)]"
-                                              px="1" py="1" label='<i class="fa-solid fa-circle-check"></i>' />
+
+
+                                    <div wire:loading.remove class="flex gap-1">
+                                        <x-button
+                                            wire:anow-confirm.reject="Apakah anda yakin ingin menolak?"
+                                            wire:click="reject({{ $item->cuti->id }})"
+                                            bg="[var(--danger)]"
+                                            px="1"
+                                            py="1"
+                                            label='<i class="fa-solid fa-circle-xmark"></i>'
+                                        />
+
+                                        <x-button
+                                            wire:anow-confirm="Apakah anda yakin?"
+                                            wire:click="approve({{ $item->cuti->id }})"
+                                            bg="[var(--success)]"
+                                            px="1"
+                                            py="1"
+                                            label='<i class="fa-solid fa-circle-check"></i>'
+                                        />
+                                    </div>
+                                    <div wire:loading>
+                                        <span class="text-sm text-gray-500 animate-pulse">Memproses...</span>
+                                    </div>
                                 @else
                                     <x-button wire:anow-confirm="Apakah anda yakin?" wire:click="backToWaiting({{ $item->cuti->id }})" bg="[var(--warning)]"
                                               px="1" py="1" label='<i class="fa-solid fa-clock"></i>' />
