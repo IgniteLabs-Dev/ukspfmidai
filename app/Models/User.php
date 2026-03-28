@@ -79,4 +79,7 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->belongsTo(Pangkat::class, 'pangkat_id');
     }
+    public function news(){
+        return $this->hasMany(News::class);
+    }
 }

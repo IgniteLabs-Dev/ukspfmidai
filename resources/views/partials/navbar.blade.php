@@ -5,7 +5,7 @@
     <nav class="bg-white  border-b border-gray-200 px-4 py-3.5">
         <div class="flex flex-wrap justify-between items-center">
             <div class="flex justify-start items-center">
-                <a href="/" class="flex gap-2 items-center">
+                <a href="/dashboard" class="flex gap-2 items-center">
                     <img src="{{ asset('images/logo.png') }}" class="h-8" alt="">
                     <h2 class="font-bold">UKSPFMIDAI</h2>
                 </a>

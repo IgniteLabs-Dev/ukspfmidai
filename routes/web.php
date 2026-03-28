@@ -14,6 +14,11 @@ use App\Livewire\PreviewCuti;
 use App\Livewire\PreviewIzin;
 use App\Livewire\ManajemenBerita;
 use \App\Http\Controllers\BeritaController;
+use \App\Http\Controllers\IndexController;
+
+Route::get('/', [IndexController::class, 'index'])->name('index');
+Route::get('/berita/{id}', [IndexController::class, 'detail'])->name('detail.berita');
+
 
 Route::get('/login', [AuthController::class, 'indexLogin'])->name('login');
 Route::post('/login-store', [AuthController::class, 'loginStore'])->name('login-store');
@@ -21,7 +26,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/register', fn() => view('pages.register'))->name('register');
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', DashboardLivewire::class)->name('index');
+    Route::get('/dashboard', DashboardLivewire::class)->name('dashboard');
     Route::get('/manajemen-user', ManajemenUser::class)->name('manajemen-user');
     Route::get('/manajemen-user/{id}/cuti', fn($id) => view('pages.manajamen-cuti-user', ['id' => $id]))->name('manajemen-cuti-user');
     Route::get('/pengajuan-cuti', PengajuanCuti::class)->name('pengajuan-cuti');

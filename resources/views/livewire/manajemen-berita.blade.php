@@ -26,20 +26,20 @@
                     <table class="w-full text-sm text-left text-gray-700 overflow-hidden">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-100 rounded-t-xl">
                         <tr>
-                            <th scope="col" class="px-6 py-3">No</th>
-                            <th scope="col" class="px-6 py-3">Judul</th>
-                            <th scope="col" class="px-6 py-3 ">Cover</th>
-                            <th scope="col" class="px-6 py-3 ">Status</th>
-                            <th scope="col" class="px-6 py-3 text-center">Aksi</th>
+                            <th scope="col" class="px-3 py-3 text-center">No</th>
+                            <th scope="col" class="px-3 py-3 text-center">Judul</th>
+                            <th scope="col" class="px-3 py-3 text-center">Cover</th>
+                            <th scope="col" class="px-3 py-3 text-center">Status</th>
+                            <th scope="col" class="px-3 py-3 text-center">Aksi</th>
                         </tr>
                         </thead>
                         <tbody>
                         @forelse ($data as $item)
                             <tr class="odd:bg-white even:bg-gray-50">
-                                <td class="px-6 py-4">{{ $data->firstItem() + $loop->index }}</td>
-                                <td class="px-6 py-4">{{ $item->title }}</td>
-                                <td class="px-6 py-4"><img class="h-15 rounded-md" alt="cover" src="{{ asset('files/news/'.  $item->cover) }}"> </td>
-                                <td class="px-6 py-4 justify-center ">
+                                <td class="px-3 py-4 text-center">{{ $data->firstItem() + $loop->index }}</td>
+                                <td class="px-3 py-4 max-w-60 ">{{ $item->title }}</td>
+                                <td class="px-3 py-4 flex justify-center"><img class="h-15 rounded-md" alt="cover" src="{{ asset('files/news/'.  $item->cover) }}"> </td>
+                                <td class="px-3 py-4 text-center ">
                                     @if ($item->is_published == '1')
                                         <span
                                             class="px-2 py-1 text-xs font-semibold text-white bg-[var(--success)] rounded-full">
@@ -95,6 +95,5 @@
                     {{ $data->links('vendor.livewire.tailwind') }}
                 </div>
             </div>
-
         </div>
 </div>
