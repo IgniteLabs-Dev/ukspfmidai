@@ -1,26 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/x-icon" href="{{ asset('images/favicon-32x32.png') }}" />
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
-        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <title>@yield('title', 'Login | UKSPFMIDAI')</title>
-    @stack('styles') {{-- buat custom CSS per page --}}
-    @livewireStyles
-</head>
+<x-navbar-home title="Login" />
 
 <body>
-    <div class="min-h-screen flex items-center justify-center">
-        <!-- Background radial gradient -->
-        <div class="absolute inset-0 -z-10"
-            style="background: radial-gradient(ellipse at 10% 10%, rgba(249,152,27,0.12), transparent 10%), radial-gradient(circle at 90% 90%, rgba(25,118,210,0.06), transparent 10%), #fff;">
-        </div>
+<div class="min-h-screen flex items-center justify-center">
 
         <div class="w-full px-4">
             <div class="mx-auto w-full max-w-md md:max-w-lg lg:max-w-sm">
@@ -77,4 +58,4 @@
     @livewireScripts
 </body>
 
-</html>
+<x-footer-home/>

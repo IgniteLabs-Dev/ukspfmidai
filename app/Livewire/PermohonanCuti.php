@@ -144,6 +144,20 @@ class PermohonanCuti extends Component
                     $cuti = Cuti::find($id);
                     $cuti->status = 'success';
                     $cuti->save();
+
+                    $emailData = Cuti::find($id);
+                    if ($emailData->user->email){
+                        Mail::to($emailData->user->email)->send(new NotificationMail([
+                            'status' => 'success', // atau 'failed'
+                            'nama' => $emailData->user->name,
+                            'jenis' => $emailData->cutiType->name,
+                            'tanggal_mulai' => Carbon::parse($emailData->tanggal_start)->locale('id')->translatedFormat('d F Y'),
+                            'tanggal_selesai' => Carbon::parse($emailData->tanggal_end)->locale('id')->translatedFormat('d F Y'),
+                            'keterangan' => $emailData->alasan ?? '-',
+                            'alasan' => $emailData->alasan_ditolak ?? '-',
+                            'tipe' => 'cuti'
+                        ]));
+                    }
                 }else{
                     $cuti = Cuti::find($id);
                     $cuti->status = 'process';
@@ -151,19 +165,6 @@ class PermohonanCuti extends Component
                 }
             });
 
-            $emailData = Cuti::find($id);
-            if ($emailData){
-                Mail::to($emailData->user->email)->send(new NotificationMail([
-                    'status' => 'success', // atau 'failed'
-                    'nama' => $emailData->user->name,
-                    'jenis' => $emailData->cutiType->name,
-                    'tanggal_mulai' => Carbon::parse($emailData->tanggal_start)->locale('id')->translatedFormat('d F Y'),
-                    'tanggal_selesai' => Carbon::parse($emailData->tanggal_end)->locale('id')->translatedFormat('d F Y'),
-                    'keterangan' => $emailData->alasan ?? '-',
-                    'alasan' => $emailData->alasan_ditolak ?? '-',
-                    'tipe' => 'cuti'
-                ]));
-            }
 
             LivewireAlert::title('Approval Cuti Berhasil!')
                 ->position('top-end')
@@ -208,7 +209,7 @@ class PermohonanCuti extends Component
             });
 
             $emailData = Cuti::find($id);
-            if ($emailData){
+            if ($emailData->user->email){
                 Mail::to($emailData->user->email)->send(new NotificationMail([
                     'status' => 'failed', // atau 'failed'
                     'nama' => $emailData->user->name,

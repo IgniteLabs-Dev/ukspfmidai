@@ -27,3 +27,4 @@ vendor.zip
 /storage/app/
 /storage/debugbar/
 /storage/framework/
+public/files/*

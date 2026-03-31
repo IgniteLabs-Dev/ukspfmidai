@@ -147,6 +147,20 @@ class PermohonanIzin extends Component
                     $izin = Izin::find($id);
                     $izin->status = 'success';
                     $izin->save();
+
+                    $emailData = Izin::find($id);
+                    if ($emailData->user->email){
+                        Mail::to($emailData->user->email)->send(new NotificationMail([
+                            'status' => 'success', // atau 'failed'
+                            'nama' => $emailData->user->name,
+                            'jenis' => $emailData->izinType->name,
+                            'tanggal_mulai' => Carbon::parse($emailData->tanggal_mulai)->locale('id')->translatedFormat('d F Y - H:i'),
+                            'tanggal_selesai' => Carbon::parse($emailData->tanggal_selesai)->locale('id')->translatedFormat('d F Y - H:i'),
+                            'keterangan' => $emailData->keperluan ?? '-',
+                            'alasan' => null,
+                            'tipe' => 'izin'
+                        ]));
+                    }
                 }else{
                     $izin = Izin::find($id);
                     $izin->status = 'process';
@@ -154,19 +168,7 @@ class PermohonanIzin extends Component
                 }
             });
 
-            $emailData = Izin::find($id);
-            if ($emailData){
-                Mail::to($emailData->user->email)->send(new NotificationMail([
-                    'status' => 'success', // atau 'failed'
-                    'nama' => $emailData->user->name,
-                    'jenis' => $emailData->izinType->name,
-                    'tanggal_mulai' => Carbon::parse($emailData->tanggal_mulai)->locale('id')->translatedFormat('d F Y - H:i'),
-                    'tanggal_selesai' => Carbon::parse($emailData->tanggal_selesai)->locale('id')->translatedFormat('d F Y - H:i'),
-                    'keterangan' => $emailData->keperluan ?? '-',
-                    'alasan' => null,
-                    'tipe' => 'izin'
-                ]));
-            }
+
 
             LivewireAlert::title('Approval Izin Berhasil!')
                 ->position('top-end')
@@ -216,7 +218,7 @@ class PermohonanIzin extends Component
                 ->show();
 
             $emailData = Izin::find($id);
-            if ($emailData){
+            if ($emailData->user->email){
                 Mail::to($emailData->user->email)->send(new NotificationMail([
                     'status' => 'failed', // atau 'failed'
                     'nama' => $emailData->user->name,

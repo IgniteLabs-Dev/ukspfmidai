@@ -58,7 +58,7 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         $cookie = Cookie::forget('token');
-        return redirect('/dashboard')->withCookie($cookie);
+        return redirect('/')->withCookie($cookie);
     }
 
 
