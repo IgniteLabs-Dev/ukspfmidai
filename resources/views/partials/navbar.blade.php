@@ -132,12 +132,14 @@
                 {{-- Group Admin --}}
                 @if ($user->role == 'SUPERADMIN' || $user->role == 'ADMIN')
                     <li class="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider list-none pt-4">Admin</li>
+                    @if ($user->role == 'SUPERADMIN')
                     <a href="{{ route('manajemen-web') }}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group {{ request()->routeIs('manajemen-web') ? 'bg-gray-100' : '' }}">
                         <svg class="shrink-0 w-5 h-5 text-gray-500 transition duration-75 {{ request()->routeIs('manajemen-web') ? 'text-gray-900' : 'group-hover:text-gray-900' }}" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 16">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 8h11m0 0L8 4m4 4-4 4m4-11h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3" />
                         </svg>
                         <span class="ms-3 font-medium">Manajemen Web</span>
                     </a>
+                    @endif
                     <a href="{{ route('manajemen-user') }}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group {{ request()->routeIs('manajemen-user') ? 'bg-gray-100' : '' }}">
                         <svg class="shrink-0 w-5 h-5 text-gray-500 transition duration-75 {{ request()->routeIs('manajemen-user') ? 'text-gray-900' : 'group-hover:text-gray-900' }}" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.96 2.96 0 0 0 .13 5H5Z" />
@@ -146,6 +148,7 @@
                         </svg>
                         <span class="ms-3 font-medium">Manajemen User</span>
                     </a>
+
                     <a href="{{ route('manajemen-berita') }}"
                        class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group {{ request()->routeIs('manajemen-berita*') ? 'bg-gray-100' : '' }}">
 

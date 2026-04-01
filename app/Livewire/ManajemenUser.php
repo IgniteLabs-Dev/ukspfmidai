@@ -6,6 +6,7 @@ use App\Models\Jabatan;
 use App\Models\Pangkat;
 use App\Models\User;
 use App\Services\CrudService;
+use Illuminate\Support\Facades\Redirect;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -23,6 +24,14 @@ class ManajemenUser extends Component
     public $filter = null;
     public $name, $nip, $password, $role, $jabatan_id, $pangkat_id, $nomor_wa,$email;
 
+
+    public function mount()
+    {
+        $user = JWTAuth::parseToken()->authenticate();
+        if ($user->role != 'SUPERADMIN' && $user->role != 'ADMIN') {
+            redirect()->route('dashboard');
+        }
+    }
 
     public function render()
     {

@@ -37,10 +37,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/{id}/preview-cuti', PreviewCuti::class)->name('preview-cuti');
     Route::get('/permohonan-izin', PermohonanIzin::class)->name('permohonan-izin');
     Route::get('/{id}/preview-izin', PreviewIzin::class)->name('preview-izin');
-    Route::view('/manajemen-web', 'pages.manajemen-web')->name('manajemen-web');
-    Route::get('/manajemen-berita', ManajemenBerita::class)->name('manajemen-berita');
-    Route::get('/manajemen-berita/create', [BeritaController::class, 'createBerita'])->name('manajemen-berita-create');
-    Route::post('/manajemen-berita/store', [BeritaController::class, 'store'])->name('manajemen-berita-store');
-    Route::get('/manajemen-berita/{id}/edit', [BeritaController::class, 'editBerita'])->name('manajemen-berita-edit');
-    Route::put('/manajemen-berita/{id}', [BeritaController::class, 'updateBerita'])->name('manajemen-berita-update');
+    Route::view('/manajemen-web', 'pages.manajemen-web')->middleware('role:SUPERADMIN')->name('manajemen-web');
+    Route::get('/manajemen-berita', ManajemenBerita::class)->middleware('role:SUPERADMIN,ADMIN')->name('manajemen-berita');
+    Route::get('/manajemen-berita/create', [BeritaController::class, 'createBerita'])->middleware('role:SUPERADMIN,ADMIN')->name('manajemen-berita-create');
+    Route::post('/manajemen-berita/store', [BeritaController::class, 'store'])->middleware('role:SUPERADMIN,ADMIN')->name('manajemen-berita-store');
+    Route::get('/manajemen-berita/{id}/edit', [BeritaController::class, 'editBerita'])->middleware('role:SUPERADMIN,ADMIN')->name('manajemen-berita-edit');
+    Route::put('/manajemen-berita/{id}', [BeritaController::class, 'updateBerita'])->middleware('role:SUPERADMIN,ADMIN')->name('manajemen-berita-update');
 });

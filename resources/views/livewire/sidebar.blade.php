@@ -111,6 +111,7 @@
                     <li class="px-2 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
                         Admin
                     </li>
+                    @if ($user->role == 'SUPERADMIN')
                     <li>
                         <a href="{{ route('manajemen-web') }}"
                             class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group {{ request()->routeIs('manajemen-web') ? 'bg-gray-100' : '' }}">
@@ -124,6 +125,7 @@
                             <span class="flex-1 ms-3 whitespace-nowrap">Manajemen Web</span>
                         </a>
                     </li>
+                    @endif
                     <li>
                         <a href="{{ route('manajemen-user') }}"
                             class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group {{ request()->routeIs('manajemen-user') ? 'bg-gray-100' : '' }}">
