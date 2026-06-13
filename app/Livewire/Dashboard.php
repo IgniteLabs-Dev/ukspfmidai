@@ -4,8 +4,6 @@ namespace App\Livewire;
 
 use App\Models\Cuti;
 use App\Models\Izin;
-use App\Models\ViewCutiKuota;
-use App\Models\ViewCutiTahunan;
 use App\Services\CutiIzinCountService;
 use Livewire\Component;
 use Tymon\JWTAuth\Facades\JWTAuth;

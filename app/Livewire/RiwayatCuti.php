@@ -10,8 +10,6 @@ use App\Models\Izin;
 use App\Models\IzinApprovalWorkflow;
 use App\Models\Tahun;
 use App\Models\User;
-use App\Models\ViewCutiKuota;
-use App\Models\ViewCutiTahunan;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Component;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;

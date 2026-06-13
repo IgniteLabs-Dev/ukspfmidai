@@ -7,7 +7,6 @@ use App\Models\CutiType;
 use App\Models\CutiUser;
 use App\Models\Tahun;
 use App\Models\User;
-use App\Models\ViewCutiKuota;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
