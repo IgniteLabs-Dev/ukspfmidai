@@ -9,12 +9,13 @@ class IndexController extends Controller
 {
     public function index()
     {
-        $data = News::latest()->paginate(10);
+        $data = News::where("is_published", 1)->latest()->paginate(10);
         return view('pages.index', [
             'data' => $data
         ]);
     }
-    public function detail($id){
+    public function detail($id)
+    {
         $data = News::findOrFail($id);
 
         return view('pages.detail-berita', [
