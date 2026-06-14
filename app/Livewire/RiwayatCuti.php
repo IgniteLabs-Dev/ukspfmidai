@@ -5,10 +5,6 @@ namespace App\Livewire;
 use App\Models\Cuti;
 use App\Models\CutiApprovalWorkflow;
 use App\Models\CutiType;
-use App\Models\CutiUser;
-use App\Models\Izin;
-use App\Models\IzinApprovalWorkflow;
-use App\Models\Tahun;
 use App\Models\User;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Component;
@@ -93,7 +89,7 @@ class RiwayatCuti extends Component
             ->paginate(10);
 
 
-        return view('livewire.riwayat-cuti', compact('data', 'tahunData', 'cutiTypesData','cutiTypes'))->extends('layouts.master');
+        return view('livewire.riwayat-cuti', compact('data', 'tahunData', 'cutiTypesData', 'cutiTypes'))->extends('layouts.master');
     }
 
     public function updatedFilter()
@@ -227,7 +223,8 @@ class RiwayatCuti extends Component
     }
 
     public function resetInput()
-    {       $this->form = [
+    {
+        $this->form = [
             'alasan' => '',
             'cuti_type_id' => '',
             'tanggal_mulai' => '',
@@ -239,8 +236,8 @@ class RiwayatCuti extends Component
     {
         $this->viewFlowId = $id;
 
-        $flowData = IzinApprovalWorkflow::with('approvalLevel')
-            ->where('izin_id', $id)
+        $flowData = CutiApprovalWorkflow::with('approvalLevel')
+            ->where('cuti_id', $id)
             ->orderBy('id')
             ->get();
 
