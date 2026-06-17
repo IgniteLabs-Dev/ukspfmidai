@@ -124,7 +124,7 @@ class ManajemenUser extends Component
     {
         $this->validate([
             'name' => 'required|string|max:255',
-            'nip' => 'required|string|max:20|unique:users,nip,' . $this->editId,
+            'nip' => 'required|string|unique:users,nip,' . $this->editId,
             'role' => 'required',
             'jabatan_id' => 'required|integer|max:100',
             'pangkat_id' => 'required|integer|max:100',
