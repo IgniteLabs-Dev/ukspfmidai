@@ -22,7 +22,7 @@ class ManajemenUser extends Component
     public $editId = null;
     public $deleteId = null;
     public $filter = null;
-    public $name, $nip, $password, $role, $jabatan_id, $pangkat_id, $nomor_wa,$email;
+    public $name, $nip, $password, $role, $jabatan_id, $pangkat_id, $nomor_wa, $email;
 
 
     public function mount()
@@ -64,7 +64,7 @@ class ManajemenUser extends Component
             ->toArray();
 
 
-        return view('livewire.manajemen-user', compact('data', 'jabatanData', 'pangkatData','userId','userRole'))->extends('layouts.master');
+        return view('livewire.manajemen-user', compact('data', 'jabatanData', 'pangkatData', 'userId', 'userRole'))->extends('layouts.master');
     }
     public function toggleMode()
     {
@@ -75,13 +75,13 @@ class ManajemenUser extends Component
         $this->mode = 'view';
         $this->resetValidation();
         $this->editId = null;
-        $this->reset(['name', 'nip', 'password', 'role', 'jabatan_id', 'pangkat_id', 'nomor_wa','email']);
+        $this->reset(['name', 'nip', 'password', 'role', 'jabatan_id', 'pangkat_id', 'nomor_wa', 'email']);
     }
     public function create(CrudService $crud)
     {
         $this->validate([
             'name' => 'required|string|max:255',
-            'nip' => 'required|string|max:20|unique:users,nip',
+            'nip' => 'required|string|unique:users,nip',
             'password' => 'required|string|min:1',
             'role' => 'required',
             'jabatan_id' => 'required|integer',
