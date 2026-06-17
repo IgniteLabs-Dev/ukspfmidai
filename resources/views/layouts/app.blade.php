@@ -15,11 +15,11 @@
 
 <body style="background-color: #f3f8fa !important;">
 
-    <div class="flex h-screen ">
+    <div class="flex h-screen overflow-hidden">
         @include('partials.sidebar')
         <div class="flex flex-col flex-1 overflow-y-auto">
             @include('partials.navbar')
-            <div class="pt-10 mt-8 px-5 ">
+            <div class="pt-6 md:pt-8 px-5 pb-8">
                 {{-- @yield('content') --}}
             </div>
         </div>

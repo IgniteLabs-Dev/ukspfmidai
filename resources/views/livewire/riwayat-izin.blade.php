@@ -1,4 +1,4 @@
-<div class="bg-white rounded-xl p-4 md:mt-0 mt-15">
+<div class="bg-white rounded-xl p-4 shadow-sm">
     <h2 class="text-2xl mb-5 font-bold text-center">
         Riwayat Izin
     </h2>

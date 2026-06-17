@@ -1,4 +1,4 @@
-<div class="bg-white rounded-xl p-4">
+<div class="bg-white rounded-xl p-4 shadow-sm">
     <h2 class="text-2xl mb-5 font-bold text-center">
         Permohonan Izin
     </h2>

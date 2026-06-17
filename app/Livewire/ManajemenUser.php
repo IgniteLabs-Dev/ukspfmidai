@@ -86,7 +86,7 @@ class ManajemenUser extends Component
             'role' => 'required',
             'jabatan_id' => 'required|integer',
             'pangkat_id' => 'required|integer',
-            'nomor_wa' => 'required|string|max:15',
+            'nomor_wa' => 'nullable|string|max:15',
             'email' => 'nullable|email',
         ]);
 

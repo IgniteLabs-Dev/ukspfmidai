@@ -1,4 +1,4 @@
-<div class="bg-white rounded-xl p-4">
+<div class="bg-white rounded-xl p-4 shadow-sm">
     <h2 class="text-3xl mb-4 font-bold text-center ">
         Pengajuan Izin
     </h2>
