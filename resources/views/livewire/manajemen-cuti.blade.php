@@ -43,12 +43,12 @@
                                     <td class="px-6 py-4 justify-center ">
                                         @if ($item->status == 'active')
                                             <span
-                                                class="px-2 py-1 text-xs font-semibold text-white bg-[var(--success)] rounded-full">
+                                                class="px-2 py-1 text-xs font-semibold whitespace-nowrap text-white bg-[var(--success)] rounded-full">
                                                 Aktif
                                             </span>
                                         @else
                                             <span
-                                                class="px-2 py-1 text-xs font-semibold text-white bg-[var(--danger)] rounded-full">
+                                                class="px-2 py-1 text-xs font-semibold whitespace-nowrap text-white bg-[var(--danger)] rounded-full">
                                                 Tidak Aktif
                                             </span>
                                         @endif
@@ -106,7 +106,7 @@
                     :required="true" />
                 <x-select label="Status" for="status" wire="status" :options="[
                     'active' => 'Aktif',
-                    'nonactive' => 'Tidak Aktif',
+                    'inactive' => 'Tidak Aktif',
                 ]" :required="true" />
 
                 <div class="col-span-2 flex justify-center items-end gap-2">

@@ -35,15 +35,21 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect('/login')->with('error', 'NIP dan password wajib di isi');
+            return redirect('/login')->with('error', 'NIP/Email dan password wajib diisi');
         }
 
-        $credentials = $request->only('nip', 'password');
+        $login = $request->input('nip');
+        $field = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'nip';
+
+        $credentials = [
+            $field => $login,
+            'password' => $request->input('password')
+        ];
 
         try {
             if (!$token = JWTAuth::attempt($credentials)) {
 
-                return redirect('/login')->with('error', 'NIP dan password tidak sesuai');
+                return redirect('/login')->with('error', 'NIP/Email atau password tidak sesuai');
             }
         } catch (JWTException $e) {
 

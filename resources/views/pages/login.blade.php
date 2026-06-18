@@ -25,8 +25,8 @@
                             @endif
 
                             <div>
-                                <label for="nip" class="block text-sm font-medium text-gray-700 mb-1">NIP</label>
-                                <input name="nip" type="nip" id="nip" aria-describedby="nip"
+                                <label for="nip" class="block text-sm font-medium text-gray-700 mb-1">NIP / Email</label>
+                                <input name="nip" type="text" id="nip" placeholder="Masukkan NIP atau Email"
                                     class="block w-full rounded-lg border border-gray-200 px-4 py-3 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-indigo-500"
                                     value="{{ old('nip') }}" />
                                 @error('nip')

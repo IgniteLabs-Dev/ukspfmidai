@@ -83,13 +83,13 @@ class ManajemenIzin extends Component
             'is_count' => $this->is_count,
         ];
 
-        $crud->update(IzinType::class, $this->editId, $data, 'Tipe Cutiberhasil diperbarui!', 'Gagal memperbarui tipe cuti.');
+        $crud->update(IzinType::class, $this->editId, $data, 'Tipe izin berhasil diperbarui!', 'Gagal memperbarui tipe izin.');
         $this->resetInput();
     }
 
     public function delete($id, CrudService $crud)
     {
-        $crud->delete(IzinType::class, $id, 'Tipe Cutiberhasil dihapus!', 'Gagal menghapus tipe cuti.');
+        $crud->delete(IzinType::class, $id, 'Tipe izin berhasil dihapus!', 'Gagal menghapus tipe izin.');
         $this->resetInput();
     }
     public function updatedFilter()
