@@ -6,7 +6,7 @@
     $cutiIzinApprover = $service->IsApprovalUser();
 @endphp
 
-<header x-data="{ open: false }" class="antialiased fixed top-0 left-0 w-full z-50">
+<header x-data="{ open: false }" class="antialiased fixed top-0 left-0 w-full z-49">
     <nav class="bg-white border-b border-gray-200 px-4 py-2.5 shadow-sm">
         <div class="flex justify-between items-center max-w-full">
             {{-- Bagian Kiri: Logo --}}

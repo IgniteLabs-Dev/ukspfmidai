@@ -45,7 +45,7 @@
                                 </div>
 
                                 <button wire:click="registerStore"
-                                    class="w-full py-3 text-base font-semibold rounded-lg bg-[var(--primary)] text-white hover:brightness-90 hover:cursor-pointer transition">
+                                    class="w-full cursor-pointer py-3 text-base font-semibold rounded-lg bg-[var(--primary)] text-white hover:brightness-90 hover:cursor-pointer transition">
                                     Register
                                 </button>
                             </div>

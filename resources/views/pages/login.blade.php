@@ -27,7 +27,7 @@
                             <div>
                                 <label for="nip" class="block text-sm font-medium text-gray-700 mb-1">NIP / Email</label>
                                 <input name="nip" type="text" id="nip" placeholder="Masukkan NIP atau Email"
-                                    class="block w-full rounded-lg border border-gray-200 px-4 py-3 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-indigo-500"
+                                    class="block w-full rounded-lg border border-gray-200 px-4 py-3 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-500"
                                     value="{{ old('nip') }}" />
                                 @error('nip')
                                     <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
@@ -37,8 +37,8 @@
                             <div>
                                 <label for="password"
                                     class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                                <input name="password" type="password" id="password"
-                                    class="block w-full rounded-lg border border-gray-200 px-4 py-3 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-indigo-500" />
+                                <input name="password" type="password" id="password" placeholder="Masukkan Kata Sandi"
+                                    class="block w-full rounded-lg border border-gray-200 px-4 py-3 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-500" />
                                 @error('password')
                                     <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
